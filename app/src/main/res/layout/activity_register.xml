@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    >
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".Activities.MainActivity"
+        android:paddingBottom="30dp">
+
+        <Button
+            android:id="@+id/register_btn_connection"
+            style="@style/SwitchButtonLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.3"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:backgroundTint="#FFFFFF"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/ic_arrow_forward_black_24dp"
+            android:text="J'ai déjà un compte "
+            />
+
+        <TextView
+            android:id="@+id/register_text_title"
+            style="@style/TitleLogin"
+            android:text="S'enregistrer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/register_btn_connection"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="17dp"
+            />
+
+        <TextView
+            android:id="@+id/register_text_mail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Créez un compte avec votre adresse Efrei"
+            app:layout_constraintLeft_toLeftOf="@+id/editText_mail"
+            app:layout_constraintTop_toBottomOf="@+id/register_text_title"
+            app:layout_constraintWidth_percent="0.65" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/editText_mail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/register_text_mail"
+            app:layout_constraintWidth_percent="0.7"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:inputType="textEmailAddress"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/text_mdp1"
+            android:text="Nouveau mot de passe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/editText_mail"
+            app:layout_constraintLeft_toLeftOf="@+id/editText_mdp1"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/editText_mdp1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_mdp1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.7"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:inputType="textPassword"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/text_mdp2"
+            android:text="Confirmez le mot de passe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/editText_mdp1"
+            app:layout_constraintLeft_toLeftOf="@+id/editText_mdp2"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/editText_mdp2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/text_mdp2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.7"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:inputType="textPassword"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/register_btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Valider"
+            app:layout_constraintTop_toBottomOf="@+id/editText_mdp2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            android:layout_marginTop="30dp"
+            app:layout_constraintHeight_min="48dp"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

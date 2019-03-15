@@ -22,13 +22,13 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
 
     @Override
     public ParentViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.parent, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.proposition_main, parent, false);
         return new ParentViewHolder(v);
     }
 
     @Override
     public myChildViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.child, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.proposition_drop_down, parent, false);
         return new myChildViewHolder(v);
     }
 
@@ -40,6 +40,7 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
 
     @Override
     public void onBindGroupViewHolder(ParentViewHolder holder, int flatPosition, ExpandableGroup group) {
+        holder.setScore(group);
         holder.setTitle(group);
     }
 }

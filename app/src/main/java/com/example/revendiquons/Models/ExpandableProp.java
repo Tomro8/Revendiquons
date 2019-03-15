@@ -8,10 +8,15 @@ import java.util.List;
 
 public class ExpandableProp extends ExpandableGroup<ExpandedProp> {
 
-    public ExpandableProp(String title, List<ExpandedProp> items) {
+    private int score;
+
+    public ExpandableProp(String title, int score, List<ExpandedProp> items) {
         super(title, items);
+        this.score = score;
     }
 
-
+    public int getScore() {
+        return this.score;
+    }
 
 }

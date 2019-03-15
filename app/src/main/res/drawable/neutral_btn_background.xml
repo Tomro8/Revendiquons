@@ -3,17 +3,17 @@
 
     <item android:state_pressed="true"
         android:state_checked="true"
-        android:drawable="@drawable/down_grey"/>
+        android:drawable="@drawable/circle_grey"/>
 
     <item android:state_pressed="true"
         android:state_checked="false"
-        android:drawable="@drawable/down_red"/>
+        android:drawable="@drawable/circle_blue"/>
 
     <item
         android:state_checked="true"
-        android:drawable="@drawable/down_red"/>
+        android:drawable="@drawable/circle_blue"/>
 
     <item
         android:state_checked="false"
-        android:drawable="@drawable/down_grey"/>
+        android:drawable="@drawable/circle_grey"/>
 </selector>

@@ -1,7 +1,7 @@
 package com.example.revendiquons.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,31 +21,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        generateRecyclerView();
+
+    }
+
+    private void generateRecyclerView() {
+
         //Create children for 1st grp
-        ExpandedProp ch1 = new ExpandedProp("Description de la proposition numero 1");
-        ExpandedProp ch2 = new ExpandedProp("Description de la proposition numero 2");
-        ExpandedProp ch3 = new ExpandedProp("Description de la proposition numero 3");
+        ExpandedProp ch1 = new ExpandedProp("Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description");
         //Add children to a list for 1st grp
         List<ExpandedProp> chList1 = new ArrayList<ExpandedProp>();
         chList1.add(ch1);
-        chList1.add(ch2);
-        chList1.add(ch3);
         Log.i("Tom", "childList1 created" + chList1);
 
         //Create children for 2nd grp
-        ExpandedProp ch4 = new ExpandedProp("Description de la proposition numero 4");
-        ExpandedProp ch5 = new ExpandedProp("Description de la proposition numero 5");
+        ExpandedProp ch4 = new ExpandedProp("Description de la proposition numero 2");
         //Add children to a list for 2nd grp
         List<ExpandedProp> chList2 = new ArrayList<ExpandedProp>();
-        chList2.add(ch1);
-        chList2.add(ch2);
-        chList2.add(ch3);
+        chList2.add(ch4);
         Log.i("Tom", "childList2 created" + chList2);
 
         //Add children list to parent groups
-        ExpandableProp gr1 = new ExpandableProp("Titre Proposition 1", chList1);
+        ExpandableProp gr1 = new ExpandableProp("Coucou", 133, chList1);
         Log.i("Tom", "parent1 created" + gr1);
-        ExpandableProp gr2 = new ExpandableProp("Titre Proposition 2", chList2);
+        ExpandableProp gr2 = new ExpandableProp("1abdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abdefghijklmnopqrstuvwxyz4abdefghijklmnopqrstuvwxyz5abdefghijklmnopqrstuvwxyz6abdefghijklmnopqrstuvwxyz7abdefghijklmnopqrstuvwxyz8abdefghijklmnopqrstuvwxyz", 0, chList2);
         Log.i("Tom", "parent2 created" + gr2);
 
         //Put parent groups into a list to provide the adapter with
@@ -67,6 +66,5 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(ad);
         Log.i("Tom", "Adapter set to recyclerView");
-
     }
 }

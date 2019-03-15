@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="22dp"
+    android:paddingBottom="22dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:background="@drawable/unique_border"
+    >
+
+    <TextView
+        android:id="@+id/proposition_main_score"
+        style="@style/PropositionScore"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/proposition_main_title"
+        style="@style/PropositionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/proposition_main_score"
+        app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="3"
+        android:minLines="3"
+        android:layout_marginStart="68dp"
+        />
+
+
+</android.support.constraint.ConstraintLayout>

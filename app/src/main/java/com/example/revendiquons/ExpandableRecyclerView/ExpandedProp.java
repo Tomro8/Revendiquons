@@ -1,7 +1,9 @@
-package com.example.revendiquons.Models;
+package com.example.revendiquons.ExpandableRecyclerView;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+//The data to be put in the expanded area
 
 public class ExpandedProp implements Parcelable {
 

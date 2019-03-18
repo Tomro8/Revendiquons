@@ -1,4 +1,4 @@
-package com.example.revendiquons.Models;
+package com.example.revendiquons.ExpandableRecyclerView;
 
 import android.util.Log;
 import android.view.View;
@@ -17,6 +17,7 @@ public class ParentViewHolder extends GroupViewHolder {
         super(itemView);
         this.score = itemView.findViewById(R.id.proposition_main_score);
         this.title = itemView.findViewById(R.id.proposition_main_title);
+        Log.i("Tom", "Creating grp");
     }
 
     public void setTitle(ExpandableGroup group) {

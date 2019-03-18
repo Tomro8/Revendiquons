@@ -1,5 +1,7 @@
 package com.example.revendiquons.Activities;
 
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,19 +12,67 @@ import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandedProp;
 import com.example.revendiquons.R;
+import com.example.revendiquons.db.AppDatabase;
+import com.example.revendiquons.db.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AppDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel);
+        setContentView(R.layout.test_db);
 
-        generateRecyclerView();
+        db = AppDatabase.getAppDatabase(this);
 
+        //populate DB
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                User u = new User();
+                u.setId(0);
+                u.setMail("un mail");
+                db.UserDao().insertAll(u);
+
+                int resultLog = db.UserDao().getAll().size();
+                Log.i("tom", "retrieved from db: " + resultLog);
+            }
+        });
+
+        //new getAuthentications(this).execute(this);
+
+        //generateRecyclerView();
+
+    }
+
+    private class getAuthentications extends AsyncTask<Activity, Void, List<User>> {
+
+        private Activity activity;
+
+        getAuthentications(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        protected List<User> doInBackground(Activity... activities) {
+            Log.i("snd", "Retrieving data in background");
+            AppDatabase db = AppDatabase.getAppDatabase(activities[0]);
+            Log.i("snd", "returning the datas");
+            return db.UserDao().getAll();
+        }
+
+        @Override
+        protected void onPostExecute(List<User> authenticationList) {
+            ((MainActivity)activity).displayUsers(authenticationList);
+        }
+    }
+
+    public void displayUsers(List<User> authenticationList) {
+        Log.i("Tom","Users: " + authenticationList.toString());
     }
 
     private void generateRecyclerView() {

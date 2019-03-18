@@ -3,9 +3,9 @@ package com.example.revendiquons.Activities;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
@@ -34,12 +34,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 User u = new User();
-                u.setId(0);
                 u.setMail("un mail");
                 db.UserDao().insertAll(u);
 
-                int resultLog = db.UserDao().getAll().size();
-                Log.i("tom", "retrieved from db: " + resultLog);
+
+                List<User> authenticationList = db.UserDao().getAll();
+                Log.i("db", "db size: " + authenticationList.size());
+                Log.i("db", "users: " + authenticationList);
             }
         });
 

@@ -51,4 +51,15 @@ public class User {
     public void setKeyActivation(int keyActivation) {
         this.keyActivation = keyActivation;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", mail='" + mail + '\'' +
+                ", password='" + password + '\'' +
+                ", isActivate=" + isActivate +
+                ", keyActivation=" + keyActivation +
+                '}';
+    }
 }

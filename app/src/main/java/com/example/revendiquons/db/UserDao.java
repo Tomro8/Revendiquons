@@ -7,6 +7,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+import io.reactivex.Single;
 
 @Dao
 public interface UserDao {
@@ -17,7 +18,7 @@ public interface UserDao {
     void updateUsers(User... users);
 
     @Query("SELECT * FROM User")
-    List<User> getAll();
+    Single<List<User>> getAll();
 
     @Delete
     public void deleteUsers(User... users);

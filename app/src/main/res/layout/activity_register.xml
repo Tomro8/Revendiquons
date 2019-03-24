@@ -41,6 +41,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="17dp"
+
             />
 
         <TextView
@@ -48,6 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
             android:text="Créez un compte avec votre adresse Efrei"
             app:layout_constraintLeft_toLeftOf="@+id/editText_mail"
             app:layout_constraintTop_toBottomOf="@+id/register_text_title"

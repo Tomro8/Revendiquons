@@ -6,6 +6,14 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 import android.util.Log;
 
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
@@ -22,34 +30,60 @@ public class MainActivity extends AppCompatActivity {
 
     private AppDatabase db;
 
+    /**
+     *  This is an object containing disposable objects. When the activity is destroyed,
+     *  we dispose this disposable container to destroy what is inside.
+     *  This is a way to avoid memory leaks (i.e references that would stay in memory even if not in reach).
+     *  We put objects likely to cause memory leaks in this disposable container.
+     */
+    private CompositeDisposable compositeDisposable;
+
+    @Override
+    protected void onDestroy() {
+        if (!compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
+        }
+        super.onDestroy();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        compositeDisposable = new CompositeDisposable();
+
         setContentView(R.layout.test_db);
 
+        //Get reference to the database
         db = AppDatabase.getAppDatabase(this);
 
-        //populate DB
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                User u = new User();
-                u.setMail("un mail");
-                db.UserDao().insertAll(u);
+        Single<List<User>> single = db.UserDao().getAll();
+        single.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new SingleObserver<List<User>>() {
 
+                @Override
+                public void onSubscribe(Disposable d) {
+                    compositeDisposable.add(d);
+                }
 
-                List<User> authenticationList = db.UserDao().getAll();
-                Log.i("db", "db size: " + authenticationList.size());
-                Log.i("db", "users: " + authenticationList);
-            }
-        });
+                @Override
+                public void onSuccess(List<User> users) {
+                    Log.i("db", "WORKING");
+                }
 
-        //new getAuthentications(this).execute(this);
+                @Override
+                public void onError(Throwable e) {
+                    Log.i("db", "Erreur");
+                }
+
+            });
 
         //generateRecyclerView();
 
     }
 
+    /*
     private class getAuthentications extends AsyncTask<Activity, Void, List<User>> {
 
         private Activity activity;
@@ -71,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             ((MainActivity)activity).displayUsers(authenticationList);
         }
     }
+    */
 
     public void displayUsers(List<User> authenticationList) {
         Log.i("Tom","Users: " + authenticationList.toString());

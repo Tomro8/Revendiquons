@@ -23,6 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection);
+        //todo: finish transition
+        //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+
 
         //Do not display keyboard because edittext is on focus at activity start
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

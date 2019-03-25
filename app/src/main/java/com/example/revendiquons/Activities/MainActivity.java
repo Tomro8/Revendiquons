@@ -15,7 +15,21 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandedProp;
@@ -24,7 +38,9 @@ import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,42 +86,84 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(List<User> users) {
                     Log.i("db", "WORKING");
+                    ((TextView)findViewById(R.id.RxJava_Text)).setText("RxJava+Room: Retrieved data from local DB: users: " + users.toString());
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     Log.i("db", "Erreur");
+                    ((TextView)findViewById(R.id.RxJava_Text)).setText("RxJava+Room: Failed to retrive data from local DB");
                 }
 
             });
 
+
+        //Instanciate the request queue
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://104.248.245.22/test.php";
+
+        //Request a string response from the URL
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ((TextView) findViewById(R.id.Volley_Text)).setText("Got response from server: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ((TextView) findViewById(R.id.Volley_Text)).setText("Error during request");
+            }
+        });
+
+        //Add request to queue
+        queue.add(stringRequest);
+
+
+
+
+        String url1 = "http://104.248.245.22/register.php";
+
+        //Request a string response from the URL
+        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url1, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                ((TextView) findViewById(R.id.VolleyPOST_Text)).setText("Got response from server: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Log.i("volley", "TimeoutError");
+                } else if (error instanceof AuthFailureError) {
+                    Log.i("volley", "AuthFailureError");
+                } else if (error instanceof ServerError) {
+                    Log.i("volley", "ServerError");
+                } else if (error instanceof NetworkError) {
+                    Log.i("volley", "NetworkError");
+                } else if (error instanceof ParseError) {
+                    Log.i("volley", "ParseError");
+                }
+                ((TextView) findViewById(R.id.VolleyPOST_Text)).setText("Error during request: " + error.toString());
+            }
+        }) {
+            @Override //Override method of anynomous class StringRequest
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mail","tom@efrei.net");
+                params.put("password","my_pwd");
+                return params;
+            }
+
+
+        };
+
+        //Add request to queue
+        queue.add(stringRequest1);
+
         //generateRecyclerView();
 
     }
-
-    /*
-    private class getAuthentications extends AsyncTask<Activity, Void, List<User>> {
-
-        private Activity activity;
-
-        getAuthentications(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        protected List<User> doInBackground(Activity... activities) {
-            Log.i("snd", "Retrieving data in background");
-            AppDatabase db = AppDatabase.getAppDatabase(activities[0]);
-            Log.i("snd", "returning the datas");
-            return db.UserDao().getAll();
-        }
-
-        @Override
-        protected void onPostExecute(List<User> authenticationList) {
-            ((MainActivity)activity).displayUsers(authenticationList);
-        }
-    }
-    */
 
     public void displayUsers(List<User> authenticationList) {
         Log.i("Tom","Users: " + authenticationList.toString());

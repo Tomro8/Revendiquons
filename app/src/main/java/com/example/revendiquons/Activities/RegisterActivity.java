@@ -7,10 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,8 +17,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.revendiquons.R;
+import com.example.revendiquons.db.RequestQueueSingleton;
+import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.channels.Channel;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
@@ -83,34 +90,57 @@ public class RegisterActivity extends AppCompatActivity {
                 pwd1_textInput.setErrorEnabled(false);
                 pwd2_textInput.setErrorEnabled(false);
 
-                //API call
-                Toast.makeText(getApplicationContext(), "Account Creation in process", Toast.LENGTH_SHORT).show();
-
-                //Instanciate the request queue
-                RequestQueue queue = Volley.newRequestQueue(view.getContext());
-                String url = "http://104.248.245.22/register.php";
-
-                //Request a string response from the URL
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        ((TextView) findViewById(R.id.Volley_Text)).setText("Got response from server: " + response);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        ((TextView) findViewById(R.id.Volley_Text)).setText("Error during request");
-                    }
-                });
-
-                //Add request to queue
-                queue.add(stringRequest);
+                APICall();
             }
         });
 
         mail_textInput = findViewById(R.id.editText_mail);
         pwd1_textInput = findViewById(R.id.editText_mdp1);
         pwd2_textInput = findViewById(R.id.editText_mdp2);
+    }
+
+    public void APICall() {
+        //Instanciate the request queue
+        String url = Server.address + "register.php";
+
+        //Request a string response from the URL
+        StringRequest stringRequest = new StringRequest (Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    //Convert string response to JSONObject
+                    JSONObject json = new JSONObject(response);
+
+                    if (json.has("success")) {
+                        //Go to channel Activity
+                        Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);
+                        startActivity(channelActivity);
+                    } else {
+                        Log.e("volley", "Request returned an error" + json.getString("error"));
+                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("volley", error.toString());
+                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override //Override method of anonymous class StringRequest
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mail", mail_textInput.getEditText().getText().toString());
+                params.put("password", pwd1_textInput.getEditText().getText().toString());
+                return params;
+            }
+        };
+
+        //Add request to queue
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     public boolean mailIsCompatible() {

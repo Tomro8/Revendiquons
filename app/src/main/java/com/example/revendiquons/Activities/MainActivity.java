@@ -15,6 +15,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
@@ -37,6 +40,9 @@ import com.example.revendiquons.R;
 import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +51,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private AppDatabase db;
+    private Button submit;
 
     /**
      *  This is an object containing disposable objects. When the activity is destroyed,
@@ -98,6 +105,18 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
+        submit = findViewById(R.id.test_btn);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doStuf();
+            }
+        });
+
+    }
+
+    public void doStuf() {
+
         //Instanciate the request queue
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://104.248.245.22/test.php";
@@ -119,32 +138,32 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
 
 
-
-
         String url1 = "http://104.248.245.22/register.php";
 
         //Request a string response from the URL
-        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url1, new Response.Listener<String>() {
-
+        StringRequest stringRequest1 = new StringRequest (Request.Method.POST, url1, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.i("volley", "Got response from server string: " + response);
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("volley", "Got response from server JSON: " + json);
+
+                boolean dd = json.optBoolean("success");
+                Log.i("volley", "success is: " + dd);
+
+
                 ((TextView) findViewById(R.id.VolleyPOST_Text)).setText("Got response from server: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.i("volley", "TimeoutError");
-                } else if (error instanceof AuthFailureError) {
-                    Log.i("volley", "AuthFailureError");
-                } else if (error instanceof ServerError) {
-                    Log.i("volley", "ServerError");
-                } else if (error instanceof NetworkError) {
-                    Log.i("volley", "NetworkError");
-                } else if (error instanceof ParseError) {
-                    Log.i("volley", "ParseError");
-                }
-                ((TextView) findViewById(R.id.VolleyPOST_Text)).setText("Error during request: " + error.toString());
+                Log.i("volley", error.toString());
             }
         }) {
             @Override //Override method of anynomous class StringRequest
@@ -154,61 +173,13 @@ public class MainActivity extends AppCompatActivity {
                 params.put("password","my_pwd");
                 return params;
             }
-
-
         };
 
         //Add request to queue
         queue.add(stringRequest1);
-
-        //generateRecyclerView();
-
     }
 
     public void displayUsers(List<User> authenticationList) {
         Log.i("Tom","Users: " + authenticationList.toString());
-    }
-
-    private void generateRecyclerView() {
-
-        //Create children for 1st grp
-        ExpandedProp ch1 = new ExpandedProp("Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description");
-        //Add children to a list for 1st grp
-        List<ExpandedProp> chList1 = new ArrayList<ExpandedProp>();
-        chList1.add(ch1);
-        Log.i("Tom", "childList1 created" + chList1);
-
-        //Create children for 2nd grp
-        ExpandedProp ch4 = new ExpandedProp("Description de la proposition numero 2");
-        //Add children to a list for 2nd grp
-        List<ExpandedProp> chList2 = new ArrayList<ExpandedProp>();
-        chList2.add(ch4);
-        Log.i("Tom", "childList2 created" + chList2);
-
-        //Add children list to parent groups
-        ExpandableProp gr1 = new ExpandableProp("Coucou", 133, chList1);
-        Log.i("Tom", "parent1 created" + gr1);
-        ExpandableProp gr2 = new ExpandableProp("1abdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abdefghijklmnopqrstuvwxyz4abdefghijklmnopqrstuvwxyz5abdefghijklmnopqrstuvwxyz6abdefghijklmnopqrstuvwxyz7abdefghijklmnopqrstuvwxyz8abdefghijklmnopqrstuvwxyz", 0, chList2);
-        Log.i("Tom", "parent2 created" + gr2);
-
-        //Put parent groups into a list to provide the adapter with
-        List<ExpandableProp> grpList = new ArrayList<ExpandableProp>();
-        grpList.add(gr1);
-        grpList.add(gr2);
-
-        //Set adapter
-        ExpandablePropAdapter ad = new ExpandablePropAdapter(grpList);
-        Log.i("Tom", "Adapter created");
-
-        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
-        Log.i("Tom", "Retreived RecyclerView");
-
-        // use a linear layout manager
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        Log.i("Tom", "Linear Manager set");
-
-        recyclerView.setAdapter(ad);
-        Log.i("Tom", "Adapter set to recyclerView");
     }
 }

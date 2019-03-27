@@ -1,7 +1,10 @@
 package com.example.revendiquons.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
@@ -17,10 +20,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ChannelActivity extends AppCompatActivity {
+
+    private Button createProp_btn;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
+
+        createProp_btn = findViewById(R.id.channel_revendiquer_btn);
+        createProp_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createPropActivity = new Intent(ChannelActivity.this, PropCreationActivity.class);
+                startActivity(createPropActivity);
+            }
+        });
 
         generateSampleRecyclerView();
     }

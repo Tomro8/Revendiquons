@@ -1,7 +1,9 @@
 package com.example.revendiquons.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +40,10 @@ public class ChannelActivity extends AppCompatActivity {
         });
 
         generateSampleRecyclerView();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int user_id = preferences.getInt("user_id", -1); //-1 = default value
+        Log.i("pref", "Welcome, user_id = " + user_id);
     }
 
     private void generateSampleRecyclerView() {

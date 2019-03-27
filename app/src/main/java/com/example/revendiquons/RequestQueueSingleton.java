@@ -1,4 +1,4 @@
-package com.example.revendiquons.db;
+package com.example.revendiquons;
 
 import android.content.Context;
 

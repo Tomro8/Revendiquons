@@ -1,4 +1,4 @@
-package com.example.revendiquons.db;
+package com.example.revendiquons.room;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

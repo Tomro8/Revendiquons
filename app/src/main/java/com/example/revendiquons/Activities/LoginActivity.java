@@ -1,7 +1,9 @@
 package com.example.revendiquons.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
-import com.example.revendiquons.db.RequestQueueSingleton;
+import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -93,6 +95,11 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(response);
 
                     if (json.has("success")) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("user_id",json.getInt("user_id"));
+                        editor.apply();
+
                         Intent channelActivity = new Intent(getApplicationContext(), ChannelActivity.class);
                         startActivity(channelActivity);
                     } else {

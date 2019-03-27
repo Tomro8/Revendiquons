@@ -1,12 +1,7 @@
 package com.example.revendiquons.Activities;
 
-import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -18,32 +13,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
-import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
-import com.example.revendiquons.ExpandableRecyclerView.ExpandedProp;
 import com.example.revendiquons.R;
-import com.example.revendiquons.db.AppDatabase;
-import com.example.revendiquons.db.User;
+import com.example.revendiquons.room.AppDatabase;
+import com.example.revendiquons.room.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

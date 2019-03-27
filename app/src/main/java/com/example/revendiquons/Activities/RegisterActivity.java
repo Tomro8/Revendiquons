@@ -1,7 +1,10 @@
 package com.example.revendiquons.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
-import com.example.revendiquons.db.RequestQueueSingleton;
+import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -96,18 +99,23 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registerAPICall() {
-        //Instanciate the request queue
         String url = Server.address + "register.php";
 
         //Request a string response from the URL
         StringRequest stringRequest = new StringRequest (Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.i("volley", "response from server: " + response.toString());
                 try {
                     //Convert string response to JSONObject
                     JSONObject json = new JSONObject(response);
 
                     if (json.has("success")) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("user_id",json.getInt("user_id"));
+                        editor.apply();
+
                         //Go to channel Activity
                         Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);
                         startActivity(channelActivity);

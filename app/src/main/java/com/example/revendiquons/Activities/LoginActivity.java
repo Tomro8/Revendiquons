@@ -2,6 +2,7 @@ package com.example.revendiquons.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,8 +14,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
+import com.example.revendiquons.db.RequestQueueSingleton;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,14 +38,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //todo: finish transition
+        //todo: finish transition, same for login activity
         //overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 
         //Do not display keyboard because edittext is on focus at activity start
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         email_textInput = findViewById(R.id.connection_editText_mail);
-        email_textInput = findViewById(R.id.connection_editText_password);
+        pwd_textInput = findViewById(R.id.connection_editText_password);
 
         goToLoginBtn = findViewById(R.id.connection_btn_register);
         goToLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,25 +60,15 @@ public class LoginActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                email_textInput.setErrorEnabled(false);
+                pwd_textInput.setErrorEnabled(false);
+
                 if (!inputFilled()) {
                     Toast.makeText(getApplicationContext(), "You must fill all the inputs", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (!userExist()) {
-                    email_textInput.setError("Unknown Account");
-                    return;
-                }
-                email_textInput.setErrorEnabled(false);
-
-                if (!checkPassword()) {
-                    pwd_textInput.setError("Wrong Password");
-                    return;
-                }
-                pwd_textInput.setErrorEnabled(false);
-
-                Intent channelActivity = new Intent(getApplicationContext(), ChannelActivity.class);
-                startActivity(channelActivity);
+                loginAPICall();
             }
         });
     }
@@ -88,32 +83,51 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean userExist() {
-        String url = Server.address + "userExist.php";
+    public void loginAPICall() {
+        String url = Server.address + "login.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                ;
+                Log.i("volley", "response from server: " + response.toString());
+                try {
+                    JSONObject json = new JSONObject(response);
+
+                    if (json.has("success")) {
+                        Intent channelActivity = new Intent(getApplicationContext(), ChannelActivity.class);
+                        startActivity(channelActivity);
+                    } else {
+                        switch (json.getString("error")) {
+                            case "user not exist":
+                                email_textInput.setError("Account does not exist");
+                                break;
+                            case "wrong password":
+                                pwd_textInput.setError("Password is incorrect");
+                                break;
+                            default:
+                                Log.e("volley", "Request returned an error" + json.getString("error"));
+                                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.i("volley", error.toString());
+                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("mail", email_textInput.getEditText().getText().toString());
+                params.put("password", pwd_textInput.getEditText().getText().toString());
                 return params;
             }
         };
 
-        return false;
-    }
-
-    public boolean checkPassword() {
-        //TODO check password Query
-        return false;
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 }

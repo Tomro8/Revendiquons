@@ -11,11 +11,9 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.revendiquons.R;
 import com.example.revendiquons.db.RequestQueueSingleton;
 import com.example.revendiquons.utils.Server;
@@ -24,7 +22,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.channels.Channel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -61,6 +58,10 @@ public class RegisterActivity extends AppCompatActivity {
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mail_textInput.setErrorEnabled(false);
+                pwd1_textInput.setErrorEnabled(false);
+                pwd2_textInput.setErrorEnabled(false);
+
                 if (!inputAreFilled()) {
                     Toast.makeText(getApplicationContext(), "You must fill all the inputs", Toast.LENGTH_SHORT).show();
                     return;
@@ -70,7 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
                     mail_textInput.setError("Incorrect Email Address");
                     return;
                 }
-                mail_textInput.setErrorEnabled(false);
 
                 if (!pwdLength()) {
                     Toast.makeText(getApplicationContext(), "Password must be 8 characters minimum", Toast.LENGTH_SHORT).show();
@@ -78,8 +78,6 @@ public class RegisterActivity extends AppCompatActivity {
                     pwd2_textInput.setError("8 characters minimum");
                     return;
                 }
-                pwd1_textInput.setErrorEnabled(false);
-                pwd2_textInput.setErrorEnabled(false);
 
                 if (!pwdAreIdentical()) {
                     Toast.makeText(getApplicationContext(), "Passwords are not matching", Toast.LENGTH_SHORT).show();
@@ -87,8 +85,6 @@ public class RegisterActivity extends AppCompatActivity {
                     pwd2_textInput.setError("Different passwords");
                     return;
                 }
-                pwd1_textInput.setErrorEnabled(false);
-                pwd2_textInput.setErrorEnabled(false);
 
                 registerAPICall();
             }

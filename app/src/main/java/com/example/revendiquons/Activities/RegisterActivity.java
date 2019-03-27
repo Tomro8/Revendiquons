@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                 pwd1_textInput.setErrorEnabled(false);
                 pwd2_textInput.setErrorEnabled(false);
 
-                APICall();
+                registerAPICall();
             }
         });
 
@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
         pwd2_textInput = findViewById(R.id.editText_mdp2);
     }
 
-    public void APICall() {
+    public void registerAPICall() {
         //Instanciate the request queue
         String url = Server.address + "register.php";
 
@@ -116,8 +116,12 @@ public class RegisterActivity extends AppCompatActivity {
                         Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);
                         startActivity(channelActivity);
                     } else {
-                        Log.e("volley", "Request returned an error" + json.getString("error"));
-                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                        if (json.getString("error").equals("mail already taken")) {
+                            mail_textInput.setError("Account already existing");
+                        } else {
+                            Log.e("volley", "Request returned an error" + json.getString("error"));
+                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -89,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean userExist() {
-        //TODO userExist Query
         String url = Server.address + "userExist.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

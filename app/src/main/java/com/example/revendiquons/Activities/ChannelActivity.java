@@ -1,6 +1,5 @@
 package com.example.revendiquons.Activities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,9 +11,9 @@ import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandedProp;
 import com.example.revendiquons.R;
-import com.example.revendiquons.ViewModel.PropositionViewModel;
-import com.example.revendiquons.room.AppDatabase;
+import com.example.revendiquons.ViewModel.ChannelViewModel;
 import com.example.revendiquons.room.entity.Proposition;
+import com.example.revendiquons.room.entity.Vote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +21,14 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class ChannelActivity extends AppCompatActivity {
 
-    private PropositionViewModel viewModel;
+    private ChannelViewModel viewModel;
     private Button createProp_btn;
     private CompositeDisposable compositeDisposable;
 
@@ -54,11 +46,18 @@ public class ChannelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_channel);
 
         //Observe on viewModel
-        viewModel = ViewModelProviders.of(this).get(PropositionViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(ChannelViewModel.class);
         viewModel.getAllProps().observe(this, new Observer<List<Proposition>>() {
             @Override
             public void onChanged(List<Proposition> propositions) {
                 Log.i("arch", "Channel UI refreshed, props: " + propositions.toString());
+            }
+        });
+
+        viewModel.getAllVotes().observe(this, new Observer<List<Vote>>() {
+            @Override
+            public void onChanged(List<Vote> votes) {
+                Log.i("arch", "Channel UI refreshed, votes: " + votes.toString());
             }
         });
 
@@ -68,7 +67,8 @@ public class ChannelActivity extends AppCompatActivity {
         createProp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.insert(new Proposition(3, 2, "More Choco", "More Choco desc"));
+                viewModel.insertProp(new Proposition(3, 2, "More Choco", "More Choco desc"));
+                viewModel.insertVote(new Vote(0, 2, 3, 2));
                 /*
                 Intent createPropActivity = new Intent(ChannelActivity.this, PropCreationActivity.class);
                 startActivity(createPropActivity);

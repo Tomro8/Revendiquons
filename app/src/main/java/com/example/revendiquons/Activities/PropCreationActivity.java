@@ -1,11 +1,12 @@
 package com.example.revendiquons.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -16,8 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.room.AppDatabase;
-import com.example.revendiquons.room.Proposition;
-import com.example.revendiquons.room.User;
+import com.example.revendiquons.room.entity.Proposition;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -25,15 +25,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -41,7 +38,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 public class PropCreationActivity extends AppCompatActivity {
-
+    //todo: bouton cancel
     private Button createProp_btn;
     private TextInputLayout title_textInput;
     private TextInputLayout desc_textInput;
@@ -68,10 +65,15 @@ public class PropCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!filledInputs()) {
+                    Toast.makeText(PropCreationActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
                     return;
                 }
-/*
-                final Proposition prop = new Proposition(0, ,
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(PropCreationActivity.this);
+                int user_id = preferences.getInt("user_id", -1); //-1 = default value
+                Log.i("pref", "user_id: " + user_id);
+
+                final Proposition prop = new Proposition(-1, user_id,
                         title_textInput.getEditText().getText().toString(),
                         desc_textInput.getEditText().getText().toString());
 
@@ -92,15 +94,17 @@ public class PropCreationActivity extends AppCompatActivity {
 
                         @Override
                         public void onComplete() {
-                            Log.i("db", "Successfully inserted new proposition into local DB");
+                            Intent channelActivity = new Intent(PropCreationActivity.this, ChannelActivity.class);
+                            startActivity(channelActivity);
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             Log.i("db", "Failed to insert new proposition into local DB");
+                            Log.e("db", e.toString());
                         }
                     });
-*/
+
             }
         });
 

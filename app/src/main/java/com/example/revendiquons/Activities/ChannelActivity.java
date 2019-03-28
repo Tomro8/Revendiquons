@@ -12,38 +12,136 @@ import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandedProp;
 import com.example.revendiquons.R;
+import com.example.revendiquons.ViewModel.PropositionViewModel;
+import com.example.revendiquons.room.AppDatabase;
+import com.example.revendiquons.room.entity.Proposition;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ChannelActivity extends AppCompatActivity {
 
+    private PropositionViewModel viewModel;
     private Button createProp_btn;
+    private CompositeDisposable compositeDisposable;
+
+    @Override
+    protected void onDestroy() {
+        if (!compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
+        }
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
 
+        //Observe on viewModel
+        viewModel = ViewModelProviders.of(this).get(PropositionViewModel.class);
+        viewModel.getAllProps().observe(this, new Observer<List<Proposition>>() {
+            @Override
+            public void onChanged(List<Proposition> propositions) {
+                Log.i("arch", "Channel UI refreshed, props: " + propositions.toString());
+            }
+        });
+
+        compositeDisposable = new CompositeDisposable();
+
         createProp_btn = findViewById(R.id.channel_revendiquer_btn);
         createProp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                viewModel.insert(new Proposition(3, 2, "More Choco", "More Choco desc"));
+                /*
                 Intent createPropActivity = new Intent(ChannelActivity.this, PropCreationActivity.class);
                 startActivity(createPropActivity);
+                */
             }
         });
 
-        generateSampleRecyclerView();
+        //generateSampleRecyclerView();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int user_id = preferences.getInt("user_id", -1); //-1 = default value
-        Log.i("pref", "Welcome, user_id = " + user_id);
+
+        /*
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+
+        Single<List<Proposition>> single = db.PropositionDao().getAll();
+        single.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Proposition>>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(List<Proposition> props) {
+                        Log.i("db", "Retrieved propositions from local db: " + props);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("db", "Erreur while retrieving propositions from the local DB");
+                    }
+
+                });
+
+        */
+    }
+
+    public void hydrateList() {
+        /*
+        final List<ExpandableProp> grpList = new ArrayList<ExpandableProp>();
+
+        AppDatabase db = AppDatabase.getAppDatabase(this);
+        Single<List<Proposition>> single = db.PropositionDao().getAll();
+        single.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new SingleObserver<List<Proposition>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    compositeDisposable.add(d);
+                }
+
+                @Override
+                public void onSuccess(List<Proposition> propositions) {
+
+                    for (Proposition prop : propositions) {
+                        ArrayList<ExpandedProp> children = new ArrayList<>();
+                        children.add(new ExpandedProp(prop.getDescription()));
+                        grpList.add(new ExpandableProp(prop.getTitle(), prop.))
+                    }
+
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e("db", "Error while trying to retrieve propositions from local DB");
+                }
+            });
+        */
+
     }
 
     private void generateSampleRecyclerView() {

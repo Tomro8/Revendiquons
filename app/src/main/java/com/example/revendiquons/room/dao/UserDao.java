@@ -1,4 +1,6 @@
-package com.example.revendiquons.room;
+package com.example.revendiquons.room.dao;
+
+import com.example.revendiquons.room.entity.User;
 
 import java.util.List;
 

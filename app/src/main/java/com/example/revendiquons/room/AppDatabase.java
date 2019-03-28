@@ -2,6 +2,11 @@ package com.example.revendiquons.room;
 
 import android.content.Context;
 
+import com.example.revendiquons.room.dao.PropositionDao;
+import com.example.revendiquons.room.dao.UserDao;
+import com.example.revendiquons.room.entity.Proposition;
+import com.example.revendiquons.room.entity.User;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;

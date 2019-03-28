@@ -1,7 +1,10 @@
-package com.example.revendiquons.room;
+package com.example.revendiquons.room.dao;
+
+import com.example.revendiquons.room.entity.Proposition;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -18,7 +21,7 @@ public interface PropositionDao {
     void updatePropositions(Proposition... Propositions);
 
     @Query("SELECT * FROM Proposition")
-    Single<List<Proposition>> getAll();
+    LiveData<List<Proposition>> getAll();
 
     @Delete
     public void deletePropositions(Proposition... Propositions);

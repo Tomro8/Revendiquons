@@ -10,13 +10,8 @@ public class Proposition {
     private int user_id;
     private String title;
     private String description;
-
-    public Proposition(int id, int user_id, String title, String description) {
-        this.id = id;
-        this.user_id = user_id;
-        this.title = title;
-        this.description = description;
-    }
+    private int positive;
+    private int negative;
 
     public int getId() {
         return id;
@@ -50,6 +45,31 @@ public class Proposition {
         this.description = description;
     }
 
+    public int getPositive() {
+        return positive;
+    }
+
+    public void setPositive(int positive) {
+        this.positive = positive;
+    }
+
+    public int getNegative() {
+        return negative;
+    }
+
+    public void setNegative(int negative) {
+        this.negative = negative;
+    }
+
+    public Proposition(int id, int user_id, String title, String description, int positive, int negative) {
+        this.id = id;
+        this.user_id = user_id;
+        this.title = title;
+        this.description = description;
+        this.positive = positive;
+        this.negative = negative;
+    }
+
     @Override
     public String toString() {
         return "Proposition{" +
@@ -57,6 +77,8 @@ public class Proposition {
                 ", user_id=" + user_id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", positive=" + positive +
+                ", negative=" + negative +
                 '}';
     }
 }

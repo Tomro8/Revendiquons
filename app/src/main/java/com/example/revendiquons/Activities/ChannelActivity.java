@@ -45,29 +45,13 @@ public class ChannelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
 
-        //Observe on viewModel
-        viewModel = ViewModelProviders.of(this).get(ChannelViewModel.class);
-        viewModel.getAllProps().observe(this, new Observer<List<Proposition>>() {
-            @Override
-            public void onChanged(List<Proposition> propositions) {
-                Log.i("arch", "Channel UI refreshed, props: " + propositions.toString());
-            }
-        });
-
-        viewModel.getAllVotes().observe(this, new Observer<List<Vote>>() {
-            @Override
-            public void onChanged(List<Vote> votes) {
-                Log.i("arch", "Channel UI refreshed, votes: " + votes.toString());
-            }
-        });
-
         compositeDisposable = new CompositeDisposable();
 
         createProp_btn = findViewById(R.id.channel_revendiquer_btn);
         createProp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.insertProp(new Proposition(3, 2, "More Choco", "More Choco desc"));
+                viewModel.insertProp(new Proposition(3, 2, "More Choco", "More Choco desc", 0, 0));
                 viewModel.insertVote(new Vote(0, 2, 3, 2));
                 /*
                 Intent createPropActivity = new Intent(ChannelActivity.this, PropCreationActivity.class);

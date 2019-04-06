@@ -75,7 +75,7 @@ public class PropCreationActivity extends AppCompatActivity {
 
                 final Proposition prop = new Proposition(-1, user_id,
                         title_textInput.getEditText().getText().toString(),
-                        desc_textInput.getEditText().getText().toString());
+                        desc_textInput.getEditText().getText().toString(), 0, 0);
 
                 final AppDatabase db = AppDatabase.getAppDatabase(PropCreationActivity.this);
                 Completable.fromAction(new Action() {

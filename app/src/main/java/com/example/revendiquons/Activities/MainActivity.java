@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
-        submit = findViewById(R.id.test_btn);
+        submit = findViewById(R.id.insert_btn);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

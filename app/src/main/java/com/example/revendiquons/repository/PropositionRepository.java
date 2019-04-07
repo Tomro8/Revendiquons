@@ -20,7 +20,7 @@ public class PropositionRepository {
     public PropositionRepository(Application application) {
         AppDatabase db = AppDatabase.getAppDatabase(application);
         propDao = db.PropositionDao();
-        //allProps = propDao.getAll();
+        allProps = propDao.getAll();
         Log.i("arch","Repository initiated with props from DB");
         Log.i("arch","RepositoryCreated");
     }

@@ -8,20 +8,21 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import io.reactivex.Single;
 
 @Dao
 public interface PropositionDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Proposition... Propositions);
 
     @Update
     void updatePropositions(Proposition... Propositions);
 
     @Query("SELECT * FROM Proposition")
-    List<Proposition> getAll();
+    LiveData<List<Proposition>> getAll();
 
     @Delete
     public void deletePropositions(Proposition... Propositions);

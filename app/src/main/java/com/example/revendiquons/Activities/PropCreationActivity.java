@@ -43,7 +43,7 @@ public class PropCreationActivity extends AppCompatActivity {
     private TextInputLayout title_textInput;
     private TextInputLayout desc_textInput;
 
-    private CompositeDisposable compositeDisposable;
+    private CompositeDisposable compositeDisposable; //Todo: remove if no RxJava
 
     @Override
     protected void onDestroy() {

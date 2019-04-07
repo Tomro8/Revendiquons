@@ -33,7 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class testActivity extends AppCompatActivity {
 
-    Button testBtn;
+    Button insertBtn;
     Button deleteBtn;
     Button readBtn;
     PropositionRepository rp;
@@ -47,13 +47,11 @@ public class testActivity extends AppCompatActivity {
         //rp = new PropositionRepository(this.getApplication());
         //rp.insert(new Proposition(0, 0, "titre", "desc", 0, 0));
 
-        //insert(new Proposition(0, 0, "titre", "desc", 0, 0));
-
-        testBtn = findViewById(R.id.test_btn);
-        testBtn.setOnClickListener(new View.OnClickListener() {
+        insertBtn = findViewById(R.id.insert_btn);
+        insertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPropositionAPI(view.getContext());
+                insert(new Proposition(0, 2, "titre", "desc", 0, 0));
             }
         });
 
@@ -132,7 +130,7 @@ public class testActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            List<Proposition> props = propDao.getAll();
+            List<Proposition> props = propDao.getAll().getValue();
             Log.i("db", "Read props from db: " + props);
             return null;
         }

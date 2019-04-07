@@ -36,7 +36,6 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
 
             }
         });
-
     }
 
     @Override

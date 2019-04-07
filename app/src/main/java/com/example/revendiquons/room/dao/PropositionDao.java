@@ -21,8 +21,11 @@ public interface PropositionDao {
     void updatePropositions(Proposition... Propositions);
 
     @Query("SELECT * FROM Proposition")
-    LiveData<List<Proposition>> getAll();
+    List<Proposition> getAll();
 
     @Delete
     public void deletePropositions(Proposition... Propositions);
+
+    @Query("DELETE FROM Proposition")
+    public void nukeTable();
 }

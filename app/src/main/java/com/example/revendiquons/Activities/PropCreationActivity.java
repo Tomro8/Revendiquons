@@ -33,7 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class PropCreationActivity extends AppCompatActivity {
-    //todo: bouton cancel
+    //todo: boutton cancel
     private Button createProp_btn;
     private TextInputLayout title_textInput;
     private TextInputLayout desc_textInput;
@@ -64,6 +64,7 @@ public class PropCreationActivity extends AppCompatActivity {
                     return;
                 }
 
+                //Get current user ID
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(PropCreationActivity.this);
                 int user_id = preferences.getInt("user_id", -1); //-1 = default value
                 Log.i("pref", "user_id: " + user_id);
@@ -72,7 +73,7 @@ public class PropCreationActivity extends AppCompatActivity {
                         title_textInput.getEditText().getText().toString(),
                         desc_textInput.getEditText().getText().toString(), 0, 0);
 
-                //Todo: Insert in DB using Repository instead of RxJava
+                //Insert Prop into local DB
                 PropositionRepository.getInstance(getApplication()).insert(prop, new DBOperationCallback() {
                     @Override
                     public void onOperationCompleted() {
@@ -80,38 +81,6 @@ public class PropCreationActivity extends AppCompatActivity {
                         startActivity(channelActivity);
                     }
                 });
-
-
-                /*
-                final AppDatabase db = AppDatabase.getAppDatabase(PropCreationActivity.this);
-                Completable.fromAction(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        db.PropositionDao().insertAll(prop);
-                    }
-                })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            compositeDisposable.add(d);
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            Intent channelActivity = new Intent(PropCreationActivity.this, ChannelActivity.class);
-                            startActivity(channelActivity);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.i("db", "Failed to insert new proposition into local DB");
-                            Log.e("db", e.toString());
-                        }
-                    });
-                */
-
             }
         });
 

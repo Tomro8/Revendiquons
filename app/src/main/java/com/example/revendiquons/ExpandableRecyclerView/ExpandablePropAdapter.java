@@ -40,14 +40,14 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
 
     @Override
     public ParentViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        Log.i("Tom", "grpOnCreate");
+        Log.i("rcl", "grpOnCreate");
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.proposition_parent, parent, false);
         return new ParentViewHolder(v);
     }
 
     @Override
     public myChildViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        Log.i("Tom", "childOnCreate");
+        Log.i("rcl", "childOnCreate");
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.proposition_child, parent, false);
 
         myChildViewHolder child = new myChildViewHolder(v);
@@ -67,7 +67,7 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
 
     @Override
     public void onBindChildViewHolder(myChildViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
-        Log.i("Tom", "bindChild");
+        Log.i("rcl", "bindChild");
         final ExpandedProp expandedProp = ((ExpandableProp) group).getItems().get(childIndex);
         holder.setDescription(expandedProp.getDescription());
         holder.setUpBtnState(false);
@@ -77,7 +77,7 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
 
     @Override
     public void onBindGroupViewHolder(ParentViewHolder holder, int flatPosition, ExpandableGroup group) {
-        Log.i("Tom", "bindGrp");
+        Log.i("rcl", "bindGrp");
         holder.setScore(group);
         holder.setTitle(group);
     }

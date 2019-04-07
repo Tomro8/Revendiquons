@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="22dp"
     android:paddingBottom="22dp"
-    android:paddingStart="16dp"
+    android:paddingStart="14dp"
     android:paddingEnd="16dp"
     android:background="@color/colorPrimaryDark"
     android:layout_marginTop="3dp"
@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/proposition_main_score"
         style="@style/PropositionScore"
-        android:layout_width="48dp"
+        android:layout_width="56dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:maxLines="3"
         android:minLines="3"
-        android:layout_marginStart="68dp"
+        android:layout_marginStart="70dp"
         />
 
 

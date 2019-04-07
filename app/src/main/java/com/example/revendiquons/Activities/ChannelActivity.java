@@ -49,7 +49,7 @@ public class ChannelActivity extends AppCompatActivity {
         viewModel.getAllProps().observe(this, new Observer<List<Proposition>>() {
             @Override
             public void onChanged(List<Proposition> propositions) {
-                Log.i("arch", "Channel UI refreshed, props: " + propositions.toString());
+                Log.i("UI", "Channel UI refreshed, props: " + propositions.toString());
 
                 List<ExpandableProp> parentGrp = new ArrayList<>();
 
@@ -82,4 +82,5 @@ public class ChannelActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int user_id = preferences.getInt("user_id", -1); //-1 = default value
     }
+
 }

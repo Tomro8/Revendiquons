@@ -1,5 +1,6 @@
 package com.example.revendiquons.room;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -10,6 +11,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.RequestQueueSingleton;
+import com.example.revendiquons.repository.DBOperationCallback;
+import com.example.revendiquons.repository.PropositionRepository;
 import com.example.revendiquons.room.dao.PropositionDao;
 import com.example.revendiquons.room.dao.UserDao;
 import com.example.revendiquons.room.dao.VoteDao;
@@ -63,6 +66,7 @@ public abstract class AppDatabase extends RoomDatabase {
         INSTANCE = null;
     }
 
+    /*
     private static void insert(Context ctx, Proposition prop) {
         PropositionDao propDao = AppDatabase.getAppDatabase(ctx).PropositionDao();
         new insertAsyncTask(propDao).execute(prop);
@@ -83,6 +87,7 @@ public abstract class AppDatabase extends RoomDatabase {
             return null;
         }
     }
+    */
 
     private static void getPropositionAPI(final Context context) {
         String url = Server.address + "listeProp.php";
@@ -105,7 +110,14 @@ public abstract class AppDatabase extends RoomDatabase {
                         int positive = json.getJSONObject(i).getInt("positive");
                         int negative = json.getJSONObject(i).getInt("negative");
 
-                        insert(context, new Proposition(id, user_id, title, description, positive, negative));
+                        //insert(context, new Proposition(id, user_id, title, description, positive, negative));
+                        PropositionRepository.getInstance((Application)context).
+                                insert(new Proposition(id, user_id, title, description, positive, negative), new DBOperationCallback() {
+                            @Override
+                            public void onOperationCompleted() {
+                                //Nothing to do;
+                            }
+                        });
                     }
 
                     //Todo: format du JSON est chelou

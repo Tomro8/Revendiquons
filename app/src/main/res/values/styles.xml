@@ -25,8 +25,18 @@
     </style>
 
     <style name="PropositionScore" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ColorScorePositive" parent="PropositionScore">
+        <item name="android:textColor">#15b210</item>
+    </style>
+    <style name="ColorScoreNegative" parent="PropositionScore">
+        <item name="android:textColor">#c9231a</item>
+    </style>
+    <style name="ColorScoreNeutral" parent="PropositionScore">
+        <item name="android:textColor">#000000</item>
     </style>
 
     <style name="PropositionTitle" parent="TextAppearance.AppCompat">

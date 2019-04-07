@@ -18,7 +18,7 @@ public class myChildViewHolder extends ChildViewHolder {
     public myChildViewHolder(final View itemView) {
         super(itemView);
         this.description = itemView.findViewById(R.id.drop_down_description);
-        Log.i("Tom", "Creating child");
+        Log.i("rcl", "Creating child");
 
         upBtn = itemView.findViewById(R.id.up_vote_btn);
         upBtn.setOnClickListener(new View.OnClickListener() {

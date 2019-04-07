@@ -15,7 +15,7 @@ import io.reactivex.Single;
 
 @Dao
 public interface PropositionDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Proposition... Propositions);
 
     @Update

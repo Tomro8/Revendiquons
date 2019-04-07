@@ -1,21 +1,14 @@
 package com.example.revendiquons.room;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.revendiquons.Activities.ChannelActivity;
-import com.example.revendiquons.Activities.RegisterActivity;
-import com.example.revendiquons.Activities.testActivity;
 import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.room.dao.PropositionDao;
 import com.example.revendiquons.room.dao.UserDao;
@@ -27,12 +20,6 @@ import com.example.revendiquons.utils.Server;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -62,6 +49,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being opened");
                     AppDatabase.getPropositionAPI(context);
+                    //Todo: animation chargement
                 }
             };
 

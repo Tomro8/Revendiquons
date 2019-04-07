@@ -14,10 +14,18 @@ import androidx.lifecycle.LiveData;
 
 public class PropositionRepository {
 
+    private static PropositionRepository instance = null;
     private PropositionDao propDao;
     private LiveData<List<Proposition>> allProps;
 
-    public PropositionRepository(Application application) {
+    public static PropositionRepository getInstance(Application application) {
+        if (instance == null) {
+            instance = new PropositionRepository(application);
+        }
+        return instance;
+    }
+
+    private PropositionRepository(Application application) {
         AppDatabase db = AppDatabase.getAppDatabase(application);
         propDao = db.PropositionDao();
         allProps = propDao.getAll();
@@ -29,23 +37,30 @@ public class PropositionRepository {
         return allProps;
     }
 
-    public void insert(Proposition prop) {
+    public void insert(Proposition prop, DBOperationCallback dbOperationCallback) {
         Log.i("db", "PropRepo inserting: " + prop);
-        new insertAsyncTask(propDao).execute(prop);
+        new insertAsyncTask(propDao, dbOperationCallback).execute(prop);
     }
 
     private static class insertAsyncTask extends AsyncTask<Proposition, Void, Void> {
 
         private PropositionDao propDao;
+        private DBOperationCallback dbOperationCallback;
 
-        insertAsyncTask(PropositionDao propDao) {
+        insertAsyncTask(PropositionDao propDao, DBOperationCallback dbOperationCallback) {
             this.propDao = propDao;
+            this.dbOperationCallback = dbOperationCallback;
         }
 
         @Override
         protected Void doInBackground(Proposition... propositions) {
             propDao.insertAll(propositions);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            dbOperationCallback.onOperationCompleted();
         }
     }
 }

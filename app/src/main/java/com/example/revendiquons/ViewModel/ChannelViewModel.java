@@ -3,6 +3,7 @@ package com.example.revendiquons.ViewModel;
 import android.app.Application;
 import android.util.Log;
 
+import com.example.revendiquons.repository.DBOperationCallback;
 import com.example.revendiquons.repository.PropositionRepository;
 import com.example.revendiquons.repository.VoteRepository;
 import com.example.revendiquons.room.entity.Proposition;
@@ -21,7 +22,7 @@ public class ChannelViewModel extends AndroidViewModel {
 
     public ChannelViewModel(Application application) {
         super(application);
-        propRepository = new PropositionRepository(application);
+        propRepository = PropositionRepository.getInstance(application);
         voteRepository = new VoteRepository(application);
         allProps = propRepository.getAllProps();
         allVotes = voteRepository.getAllVotes();
@@ -35,8 +36,8 @@ public class ChannelViewModel extends AndroidViewModel {
         return allVotes;
     }
 
-    public void insertProp(Proposition prop) {
-        propRepository.insert(prop);
+    public void insertProp(Proposition prop, DBOperationCallback dbOperationCallback) {
+        propRepository.insert(prop, dbOperationCallback);
     }
 
     public void insertVote(Vote vote) {

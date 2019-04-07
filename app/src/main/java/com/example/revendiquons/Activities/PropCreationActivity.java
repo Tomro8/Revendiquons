@@ -16,7 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
-import com.example.revendiquons.room.AppDatabase;
+import com.example.revendiquons.repository.DBOperationCallback;
+import com.example.revendiquons.repository.PropositionRepository;
 import com.example.revendiquons.room.entity.Proposition;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,13 +30,7 @@ import java.util.Map;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
 
 public class PropCreationActivity extends AppCompatActivity {
     //todo: bouton cancel
@@ -73,10 +68,21 @@ public class PropCreationActivity extends AppCompatActivity {
                 int user_id = preferences.getInt("user_id", -1); //-1 = default value
                 Log.i("pref", "user_id: " + user_id);
 
-                final Proposition prop = new Proposition(-1, user_id,
+                final Proposition prop = new Proposition(0, user_id,
                         title_textInput.getEditText().getText().toString(),
                         desc_textInput.getEditText().getText().toString(), 0, 0);
 
+                //Todo: Insert in DB using Repository instead of RxJava
+                PropositionRepository.getInstance(getApplication()).insert(prop, new DBOperationCallback() {
+                    @Override
+                    public void onOperationCompleted() {
+                        Intent channelActivity = new Intent(PropCreationActivity.this, ChannelActivity.class);
+                        startActivity(channelActivity);
+                    }
+                });
+
+
+                /*
                 final AppDatabase db = AppDatabase.getAppDatabase(PropCreationActivity.this);
                 Completable.fromAction(new Action() {
                     @Override
@@ -104,6 +110,7 @@ public class PropCreationActivity extends AppCompatActivity {
                             Log.e("db", e.toString());
                         }
                     });
+                */
 
             }
         });
@@ -164,4 +171,5 @@ public class PropCreationActivity extends AppCompatActivity {
         //Add request to queue
         RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
+
 }

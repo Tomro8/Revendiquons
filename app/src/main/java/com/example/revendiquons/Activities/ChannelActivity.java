@@ -22,6 +22,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,11 +32,26 @@ public class ChannelActivity extends AppCompatActivity {
     private ChannelViewModel viewModel;
     private Button createProp_btn;
     private RecyclerView recyclerView;
+    private ExpandablePropAdapter expandableAdapter;
+/*
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        expandableAdapter.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        expandableAdapter.onRestoreInstanceState(savedInstanceState);
+    }
+    */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
+        Log.i("Tom", "ChannelActivity Created");
 
         //Set up RecyclerView
         recyclerView = findViewById(R.id.my_recycler_view);
@@ -54,19 +70,19 @@ public class ChannelActivity extends AppCompatActivity {
                 List<ExpandableProp> parentGrp = new ArrayList<>();
 
                 for (Proposition prop : propositions) {
-                    ExpandedProp child = new ExpandedProp(prop.getDescription());
+                    ExpandedProp child = new ExpandedProp(prop.getDescription(), prop.getId());
                     List<ExpandedProp> childGrp = new ArrayList<>();
                     childGrp.add(child);
 
-                    ExpandableProp parent = new ExpandableProp(prop.getTitle(), prop.getPositive() - prop.getNegative(), childGrp);
-                    //Todo: transform with map to get score immediately
-
+                    ExpandableProp parent = new ExpandableProp(prop, childGrp);
                     parentGrp.add(parent);
                 }
 
                 //Set adapter
-                ExpandablePropAdapter expandableAdapter = new ExpandablePropAdapter(parentGrp);
+                expandableAdapter = new ExpandablePropAdapter(parentGrp);
                 recyclerView.setAdapter(expandableAdapter);
+
+                //viewModel.getAllProps().removeObservers(ChannelActivity.this);
             }
         });
 
@@ -81,6 +97,15 @@ public class ChannelActivity extends AppCompatActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int user_id = preferences.getInt("user_id", -1); //-1 = default value
+    }
+
+    public ChannelViewModel getViewModel() {
+        return  viewModel;
+    }
+
+    public void heyhey() {
+        expandableAdapter.notifyDataSetChanged();
+        //expandableAdapter.
     }
 
 }

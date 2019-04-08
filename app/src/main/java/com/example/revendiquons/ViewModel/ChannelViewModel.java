@@ -40,6 +40,10 @@ public class ChannelViewModel extends AndroidViewModel {
         propRepository.insert(prop, dbOperationCallback);
     }
 
+    public void updateProp(Proposition prop) {
+        propRepository.update(prop);
+    }
+
     public void insertVote(Vote vote) {
         voteRepository.insert(vote);
     }

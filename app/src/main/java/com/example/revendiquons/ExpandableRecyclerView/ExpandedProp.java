@@ -8,18 +8,22 @@ import android.os.Parcelable;
 public class ExpandedProp implements Parcelable {
 
     private String description;
+    private int prop_id;
 
-    public ExpandedProp(String desc) {
+    public ExpandedProp(String desc, int prop_id) {
         this.description = desc;
+        this.prop_id = prop_id;
     }
 
     protected ExpandedProp(Parcel in) {
         description = in.readString();
+        prop_id = in.readInt();
     }
 
     public String getDescription() {
         return description;
     }
+    public int getPropId() { return prop_id; }
 
     public static final Creator<ExpandedProp> CREATOR = new Creator<ExpandedProp>() {
         @Override

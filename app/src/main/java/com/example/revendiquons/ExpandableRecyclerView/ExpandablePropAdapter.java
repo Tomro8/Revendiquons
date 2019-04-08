@@ -18,6 +18,7 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
     public ExpandablePropAdapter(final List<? extends ExpandableGroup> groups)
     {
         super(groups);
+        //expandableList.expandedGroupIndexes
         setOnGroupExpandCollapseListener(new GroupExpandCollapseListener() {
             /**
              *  Lorsque l'on étend le groupe, on regarde si les autres groupes sont étendus et on les ferme.
@@ -68,8 +69,10 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentV
     @Override
     public void onBindChildViewHolder(myChildViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
         Log.i("rcl", "bindChild");
-        final ExpandedProp expandedProp = ((ExpandableProp) group).getItems().get(childIndex);
-        holder.setDescription(expandedProp.getDescription());
+        ExpandableProp parentGroup = (ExpandableProp) group;
+        //Get child from parent
+        //final ExpandedProp expandedProp = parentGroup.getItems().get(childIndex);
+        holder.onBind(parentGroup.getProposition());
         holder.setUpBtnState(false);
         holder.setDownBtnState(false);
         holder.setWhiteBtnState(false);

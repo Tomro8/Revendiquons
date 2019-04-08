@@ -37,6 +37,25 @@ public class PropositionRepository {
         return allProps;
     }
 
+    public void update(Proposition proposition) {
+        new VoteAsyncTask(propDao).execute(proposition);
+    }
+
+    private static class VoteAsyncTask extends AsyncTask<Proposition, Void, Void> {
+
+        private PropositionDao propDao;
+
+        VoteAsyncTask(PropositionDao propDao) {
+            this.propDao = propDao;
+        }
+
+        @Override
+        protected Void doInBackground(Proposition... propositions) {
+            propDao.updatePropositions(propositions);
+            return null;
+        }
+    }
+
     public void insert(Proposition prop, DBOperationCallback dbOperationCallback) {
         Log.i("db", "PropRepo inserting: " + prop);
         new insertAsyncTask(propDao, dbOperationCallback).execute(prop);

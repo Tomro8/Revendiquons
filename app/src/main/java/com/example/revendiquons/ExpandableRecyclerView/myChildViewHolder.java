@@ -1,12 +1,20 @@
 package com.example.revendiquons.ExpandableRecyclerView;
 
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.example.revendiquons.Activities.ChannelActivity;
 import com.example.revendiquons.R;
+import com.example.revendiquons.ViewModel.ChannelViewModel;
+import com.example.revendiquons.repository.PropositionRepository;
+import com.example.revendiquons.room.entity.Proposition;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
+
+import androidx.lifecycle.ViewModel;
 
 public class myChildViewHolder extends ChildViewHolder {
 
@@ -14,9 +22,12 @@ public class myChildViewHolder extends ChildViewHolder {
     private CompoundButton whiteBtn;
     private CompoundButton downBtn;
     private TextView description;
+    private Proposition proposition;
+    private ChannelViewModel channelViewModel;
 
     public myChildViewHolder(final View itemView) {
         super(itemView);
+        this.channelViewModel = ((ChannelActivity) itemView.getContext()).getViewModel();
         this.description = itemView.findViewById(R.id.drop_down_description);
         Log.i("rcl", "Creating child");
 
@@ -29,7 +40,13 @@ public class myChildViewHolder extends ChildViewHolder {
                     whiteBtn.setChecked(false);
                     downBtn.setChecked(false);
                     upBtn.setChecked(true);
+
                     //Increase Positive Counter
+                    Log.i("rcl","Before increasing counter");
+                    //proposition.incPositive();
+                    //((ChannelActivity) itemView.getContext()).heyhey();
+                    //channelViewModel.updateProp(proposition);
+
                 } else {
                     upBtn.setChecked(false);
                     //Decrease Positive Counter
@@ -72,8 +89,9 @@ public class myChildViewHolder extends ChildViewHolder {
 
     }
 
-    public void setDescription(String description) {
-        this.description.setText(description);
+    public void onBind(Proposition proposition) {
+        this.description.setText(proposition.getDescription());
+        this.proposition = proposition;
     }
 
     public void setDescriptionClickListener(View.OnClickListener listener) {

@@ -21,6 +21,15 @@ public interface PropositionDao {
     @Update
     void updatePropositions(Proposition... Propositions);
 
+    @Query("UPDATE Proposition SET positive = positive+1 WHERE id = :prop_id")
+    public void upVote(int prop_id);
+
+    @Query("UPDATE Proposition SET positive = negative-1 WHERE id = :prop_id")
+    public void downVote(int prop_id);
+
+    @Query("UPDATE Proposition SET positive = positive+1 WHERE id = :prop_id")
+    public void neutralVote(int prop_id);
+
     @Query("SELECT * FROM Proposition")
     LiveData<List<Proposition>> getAll();
 

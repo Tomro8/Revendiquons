@@ -61,6 +61,10 @@ public class Proposition {
         this.negative = negative;
     }
 
+    public void incPositive() {
+        this.positive = positive + 1;
+    }
+
     public Proposition(int id, int user_id, String title, String description, int positive, int negative) {
         this.id = id;
         this.user_id = user_id;

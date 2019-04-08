@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
+import com.example.revendiquons.WebService;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -69,8 +70,9 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "You must fill all the inputs", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                loginAPICall();
+                WebService.getInstance(getApplicationContext()).loginAPICall(email_textInput.getEditText().getText().toString(),
+                        pwd_textInput.getEditText().getText().toString(),
+                        loginCallBack());
             }
         });
     }
@@ -85,9 +87,8 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    public void loginAPICall() {
-        String url = Server.address + "login.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+    public Response.Listener<String> loginCallBack() {
+        return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("volley", "response from server: " + response.toString());
@@ -119,22 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("volley", error.toString());
-                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("mail", email_textInput.getEditText().getText().toString());
-                params.put("password", pwd_textInput.getEditText().getText().toString());
-                return params;
-            }
         };
-
-        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
+
 }

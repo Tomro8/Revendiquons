@@ -1,5 +1,6 @@
 package com.example.revendiquons.ExpandableRecyclerView;
 
+import com.example.revendiquons.room.entity.Proposition;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.List;
@@ -8,15 +9,19 @@ import java.util.List;
 
 public class ExpandableProp extends ExpandableGroup<ExpandedProp> {
 
-    private int score;
+    private Proposition proposition;
 
-    public ExpandableProp(String title, int score, List<ExpandedProp> items) {
-        super(title, items);
-        this.score = score;
+    public ExpandableProp(Proposition prop, List<ExpandedProp> items) {
+        super(prop.getTitle(), items);
+        this.proposition = prop;
+    }
+
+    public Proposition getProposition() {
+        return proposition;
     }
 
     public int getScore() {
-        return this.score;
+        return proposition.getPositive() - proposition.getNegative();
     }
 
 }

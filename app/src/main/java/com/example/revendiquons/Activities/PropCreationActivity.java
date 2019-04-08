@@ -6,27 +6,16 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
-import com.example.revendiquons.RequestQueueSingleton;
+import com.example.revendiquons.WebService;
 import com.example.revendiquons.repository.DBOperationCallback;
 import com.example.revendiquons.repository.PropositionRepository;
 import com.example.revendiquons.room.entity.Proposition;
-import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,6 +44,9 @@ public class PropCreationActivity extends AppCompatActivity {
 
         compositeDisposable = new CompositeDisposable();
 
+        //Do not display keyboard because edittext is on focus at activity start
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         createProp_btn = findViewById(R.id.creation_btn_submit);
         createProp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +61,14 @@ public class PropCreationActivity extends AppCompatActivity {
                 int user_id = preferences.getInt("user_id", -1); //-1 = default value
                 Log.i("pref", "user_id: " + user_id);
 
-                final Proposition prop = new Proposition(0, user_id,
-                        title_textInput.getEditText().getText().toString(),
-                        desc_textInput.getEditText().getText().toString(), 0, 0);
+                String title = title_textInput.getEditText().getText().toString();
+                String desc = desc_textInput.getEditText().getText().toString();
+
+                final Proposition prop = new Proposition(0, user_id, title, desc, 0, 0);
+
+                //Insert Prop into Remote DB
+                WebService.getInstance(getApplicationContext()).createPropAPICall(Integer.toString(user_id), title, desc);
+
 
                 //Insert Prop into local DB
                 PropositionRepository.getInstance(getApplication()).insert(prop, new DBOperationCallback() {
@@ -96,49 +93,6 @@ public class PropCreationActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    public void createPropAPICall() {
-        String url = Server.address + "createProp.php";
-
-        //Request a string response from the URL
-        StringRequest stringRequest = new StringRequest (Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //Convert string response to JSONObject
-                    JSONObject json = new JSONObject(response);
-
-                    if (json.has("success")) {
-                        //Go to channel Activity
-                        Intent channelActivity = new Intent(PropCreationActivity.this, ChannelActivity.class);
-                        startActivity(channelActivity);
-                    } else {
-                        Log.e("volley", "Request returned an error" + json.getString("error"));
-                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("volley", error.toString());
-                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override //Override method of anonymous class StringRequest
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("title", title_textInput.getEditText().getText().toString());
-                params.put("text", desc_textInput.getEditText().getText().toString());
-                return params;
-            }
-        };
-
-        //Add request to queue
-        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 
 }

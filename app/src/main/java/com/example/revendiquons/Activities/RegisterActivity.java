@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
+import com.example.revendiquons.WebService;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -89,7 +90,10 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                registerAPICall();
+                WebService.getInstance(getApplicationContext()).registerAPICall(
+                        mail_textInput.getEditText().getText().toString(),
+                        pwd1_textInput.getEditText().getText().toString(),
+                        registerCallBack());
             }
         });
 
@@ -97,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
         pwd1_textInput = findViewById(R.id.editText_mdp1);
         pwd2_textInput = findViewById(R.id.editText_mdp2);
     }
-
+/*
     public void registerAPICall() {
         String url = Server.address + "register.php";
 
@@ -149,6 +153,40 @@ public class RegisterActivity extends AppCompatActivity {
 
         //Add request to queue
         RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+    */
+
+    public Response.Listener<String> registerCallBack() {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("volley", "response from server: " + response.toString());
+                try {
+                    //Convert string response to JSONObject
+                    JSONObject json = new JSONObject(response);
+
+                    if (json.has("success")) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("user_id",json.getInt("user_id"));
+                        editor.apply();
+
+                        //Go to channel Activity
+                        Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);
+                        startActivity(channelActivity);
+                    } else {
+                        if (json.getString("error").equals("mail already taken")) {
+                            mail_textInput.setError("Account already existing");
+                        } else {
+                            Log.e("volley", "Request returned an error" + json.getString("error"));
+                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     public boolean mailIsCompatible() {

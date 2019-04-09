@@ -1,6 +1,7 @@
 package com.example.revendiquons.repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.revendiquons.room.AppDatabase;
@@ -14,8 +15,16 @@ import androidx.lifecycle.LiveData;
 public class VoteRepository {
     private VoteDao voteDao;
     private LiveData<List<Vote>> allVotes;
+    static private VoteRepository instance;
 
-    public VoteRepository(Application application) {
+    static public VoteRepository getInstance(Application application) {
+        if (instance == null) {
+            instance = new VoteRepository(application);
+        }
+        return instance;
+    }
+
+    private VoteRepository(Application application) {
         AppDatabase db = AppDatabase.getAppDatabase(application);
         voteDao = db.voteDao();
         allVotes = voteDao.getAll();

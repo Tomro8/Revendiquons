@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.WebService;
+import com.example.revendiquons.room.AppDatabase;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -96,11 +97,16 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(response);
 
                     if (json.has("success")) {
+                        int user_id = json.getInt("user_id");
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putInt("user_id",json.getInt("user_id"));
+                        editor.putInt("user_id", user_id);
                         editor.apply();
 
+                        //Populate DB with user votes
+                        AppDatabase.getAppDatabase(getApplicationContext()).populateVoteEntity(getApplicationContext(), user_id);
+
+                        //Redirect to channel activity
                         Intent channelActivity = new Intent(getApplicationContext(), ChannelActivity.class);
                         startActivity(channelActivity);
                     } else {

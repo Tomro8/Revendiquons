@@ -23,7 +23,7 @@ public class ChannelViewModel extends AndroidViewModel {
     public ChannelViewModel(Application application) {
         super(application);
         propRepository = PropositionRepository.getInstance(application);
-        voteRepository = new VoteRepository(application);
+        voteRepository = VoteRepository.getInstance(application);
         allProps = propRepository.getAllProps();
         allVotes = voteRepository.getAllVotes();
         Log.i("arch","ViewModelCreated");

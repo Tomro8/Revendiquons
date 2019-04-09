@@ -1,10 +1,15 @@
 package com.example.revendiquons.room.entity;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class Vote {
+    @ForeignKey(entity = Proposition.class,
+            parentColumns = "id",
+            childColumns = "id_proposition")
+
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int id_user;

@@ -16,6 +16,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.repository.PropositionRepository;
+import com.example.revendiquons.repository.VoteRepository;
 import com.example.revendiquons.room.AppDatabase;
 import com.example.revendiquons.room.dao.PropositionDao;
 import com.example.revendiquons.room.entity.Proposition;

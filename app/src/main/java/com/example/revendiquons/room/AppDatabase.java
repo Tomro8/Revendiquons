@@ -2,7 +2,6 @@ package com.example.revendiquons.room;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,8 +10,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.RequestQueueSingleton;
+import com.example.revendiquons.WebService;
 import com.example.revendiquons.repository.DBOperationCallback;
 import com.example.revendiquons.repository.PropositionRepository;
+import com.example.revendiquons.repository.VoteRepository;
 import com.example.revendiquons.room.dao.PropositionDao;
 import com.example.revendiquons.room.dao.UserDao;
 import com.example.revendiquons.room.dao.VoteDao;
@@ -23,6 +24,7 @@ import com.example.revendiquons.utils.Server;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -45,13 +47,13 @@ public abstract class AppDatabase extends RoomDatabase {
                 @Override
                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being created");
-                    AppDatabase.getPropositionAPI(context);
+                    populatePropEntity(context);
                 }
 
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being opened");
-                    AppDatabase.getPropositionAPI(context);
+                    populatePropEntity(context);
                     //Todo: animation chargement
                 }
             };
@@ -66,34 +68,50 @@ public abstract class AppDatabase extends RoomDatabase {
         INSTANCE = null;
     }
 
-    /*
-    private static void insert(Context ctx, Proposition prop) {
-        PropositionDao propDao = AppDatabase.getAppDatabase(ctx).PropositionDao();
-        new insertAsyncTask(propDao).execute(prop);
+    public void populateVoteEntity(Context context, int user_id) {
+        Log.i("db", "Population votes from userid: " + user_id);
+        WebService.getInstance(context).getUserVotes(Integer.toString(user_id), getUserVoteAPICallback(context));
     }
 
-    private static class insertAsyncTask extends AsyncTask<Proposition, Void, Void> {
-
-        private PropositionDao propDao;
-
-        insertAsyncTask(PropositionDao propDao) {
-            this.propDao = propDao;
-        }
-
-        @Override
-        protected Void doInBackground(Proposition... propositions) {
-            Log.i("db", "adding prop to db: " + propositions[0]);
-            propDao.insertAll(propositions);
-            return null;
-        }
+    private static void populatePropEntity(Context context) {
+        WebService.getInstance(context.getApplicationContext()).getPropositionAPICall(populatePropEntityCallback(context));
     }
-    */
 
-    private static void getPropositionAPI(final Context context) {
-        String url = Server.address + "listeProp.php";
+    private static Response.Listener<String> getUserVoteAPICallback(final Context context) {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("volley", "response from server: " + response);
+                try {
+                    //Convert string response to JSONObject
+                    JSONObject json = new JSONObject(response);
+                    Log.i("volley", "json: " + json);
 
-        //Request a string response from the URL
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    if (json.has("error")) {
+                        Log.i("volley", "Error from server: " + json.get("error"));
+                    } else {
+
+                        JSONArray jsonArray = new JSONArray(response);
+                        Log.i("volley", "json array: " + json);
+                        for (int i=0; i<jsonArray.length(); i++) {
+                            int id = jsonArray.getJSONObject(i).getInt("id");
+                            int user_id = jsonArray.getJSONObject(i).getInt("id_user");
+                            int proposition_id = jsonArray.getJSONObject(i).getInt("id_proposition");
+                            int voteValue = jsonArray.getJSONObject(i).getInt("forOrAgainst");
+
+                            Vote vote = new Vote(id, user_id, proposition_id, voteValue);
+                            VoteRepository.getInstance((Application)context).insert(vote);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    private static Response.Listener<String> populatePropEntityCallback(final Context context) {
+        return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("volley", "response from server: " + response);
@@ -113,28 +131,17 @@ public abstract class AppDatabase extends RoomDatabase {
                         //insert(context, new Proposition(id, user_id, title, description, positive, negative));
                         PropositionRepository.getInstance((Application)context).
                                 insert(new Proposition(id, user_id, title, description, positive, negative), new DBOperationCallback() {
-                            @Override
-                            public void onOperationCompleted() {
-                                //Nothing to do;
-                            }
-                        });
+                                    @Override
+                                    public void onOperationCompleted() {
+                                        //Nothing to do;
+                                    }
+                                });
                     }
-
-                    //Todo: format du JSON est chelou
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("volley", error.toString());
-                Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //Add request to queue
-        RequestQueueSingleton.getInstance(context).addToRequestQueue(stringRequest);
+        };
     }
 }

@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
 import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.WebService;
+import com.example.revendiquons.room.AppDatabase;
 import com.example.revendiquons.utils.Server;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -101,60 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
         pwd1_textInput = findViewById(R.id.editText_mdp1);
         pwd2_textInput = findViewById(R.id.editText_mdp2);
     }
-/*
-    public void registerAPICall() {
-        String url = Server.address + "register.php";
-
-        //Request a string response from the URL
-        StringRequest stringRequest = new StringRequest (Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("volley", "response from server: " + response.toString());
-                try {
-                    //Convert string response to JSONObject
-                    JSONObject json = new JSONObject(response);
-
-                    if (json.has("success")) {
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putInt("user_id",json.getInt("user_id"));
-                        editor.apply();
-
-                        //Go to channel Activity
-                        Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);
-                        startActivity(channelActivity);
-                    } else {
-                        if (json.getString("error").equals("mail already taken")) {
-                            mail_textInput.setError("Account already existing");
-                        } else {
-                            Log.e("volley", "Request returned an error" + json.getString("error"));
-                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("volley", error.toString());
-                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override //Override method of anonymous class StringRequest
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("mail", mail_textInput.getEditText().getText().toString());
-                params.put("password", pwd1_textInput.getEditText().getText().toString());
-                return params;
-            }
-        };
-
-        //Add request to queue
-        RequestQueueSingleton.getInstance(this).addToRequestQueue(stringRequest);
-    }
-    */
 
     public Response.Listener<String> registerCallBack() {
         return new Response.Listener<String>() {
@@ -166,10 +113,14 @@ public class RegisterActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(response);
 
                     if (json.has("success")) {
+                        int user_id = json.getInt("user_id");
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putInt("user_id",json.getInt("user_id"));
+                        editor.putInt("user_id", user_id);
                         editor.apply();
+
+                        //Populate DB with user votes
+                        AppDatabase.getAppDatabase(getApplicationContext()).populateVoteEntity(getApplicationContext(), user_id);
 
                         //Go to channel Activity
                         Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);

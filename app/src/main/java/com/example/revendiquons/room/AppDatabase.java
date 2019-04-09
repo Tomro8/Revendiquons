@@ -81,18 +81,17 @@ public abstract class AppDatabase extends RoomDatabase {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("volley", "response from server: " + response);
+                Log.i("volley", "populate vote response from server: " + response);
                 try {
                     //Convert string response to JSONObject
                     JSONObject json = new JSONObject(response);
-                    Log.i("volley", "json: " + json);
+                    Log.i("volley", "jsonObject: " + json);
 
                     if (json.has("error")) {
                         Log.i("volley", "Error from server: " + json.get("error"));
                     } else {
-
-                        JSONArray jsonArray = new JSONArray(response);
-                        Log.i("volley", "json array: " + json);
+                        JSONArray jsonArray = json.getJSONArray("votes");
+                        Log.i("volley", "json array: " + jsonArray);
                         for (int i=0; i<jsonArray.length(); i++) {
                             int id = jsonArray.getJSONObject(i).getInt("id");
                             int user_id = jsonArray.getJSONObject(i).getInt("id_user");
@@ -101,9 +100,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
                             Vote vote = new Vote(id, user_id, proposition_id, voteValue);
                             VoteRepository.getInstance((Application)context).insert(vote);
+                            Log.i("db", "insert vote into DB: " + vote);
                         }
                     }
                 } catch (JSONException e) {
+                    Log.i("db", "ResponseListener populateVoteEntity: in Exception:" + e.getMessage());
                     e.printStackTrace();
                 }
             }

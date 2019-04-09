@@ -86,6 +86,13 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.getAllVotes().observe(this, new Observer<List<Vote>>() {
+            @Override
+            public void onChanged(List<Vote> votes) {
+                Log.i("UI", "Vote modified: " + votes.toString());
+            }
+        });
+
         createProp_btn = findViewById(R.id.channel_revendiquer_btn);
         createProp_btn.setOnClickListener(new View.OnClickListener() {
             @Override

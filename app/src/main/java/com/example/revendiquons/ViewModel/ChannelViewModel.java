@@ -32,9 +32,6 @@ public class ChannelViewModel extends AndroidViewModel {
     public LiveData<List<Proposition>> getAllProps() {
         return allProps;
     }
-    public LiveData<List<Vote>> getAllVotes() {
-        return allVotes;
-    }
 
     public void insertProp(Proposition prop, DBOperationCallback dbOperationCallback) {
         propRepository.insert(prop, dbOperationCallback);
@@ -42,6 +39,10 @@ public class ChannelViewModel extends AndroidViewModel {
 
     public void updateProp(Proposition prop) {
         propRepository.update(prop);
+    }
+
+    public LiveData<List<Vote>> getAllVotes() {
+        return allVotes;
     }
 
     public void insertVote(Vote vote) {

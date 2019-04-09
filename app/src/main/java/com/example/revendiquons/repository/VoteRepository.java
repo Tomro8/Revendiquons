@@ -3,6 +3,7 @@ package com.example.revendiquons.repository;
 import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.revendiquons.room.AppDatabase;
 import com.example.revendiquons.room.dao.VoteDao;
@@ -36,6 +37,7 @@ public class VoteRepository {
 
     public void insert(Vote vote) {
         new insertAsyncTask(voteDao).execute(vote);
+        Log.i("db", "VoteRepo, inserting: " + vote);
     }
 
     private static class insertAsyncTask extends AsyncTask<Vote, Void, Void> {

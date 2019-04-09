@@ -3,11 +3,11 @@ package com.example.revendiquons.ViewModel;
 import android.app.Application;
 import android.util.Log;
 
-import com.example.revendiquons.repository.DBOperationCallback;
-import com.example.revendiquons.repository.PropositionRepository;
-import com.example.revendiquons.repository.VoteRepository;
-import com.example.revendiquons.room.entity.Proposition;
-import com.example.revendiquons.room.entity.Vote;
+import com.example.revendiquons.db.repository.DBOperationCallback;
+import com.example.revendiquons.db.repository.PropositionRepository;
+import com.example.revendiquons.db.repository.VoteRepository;
+import com.example.revendiquons.db.entity.Proposition;
+import com.example.revendiquons.db.entity.Vote;
 
 import java.util.List;
 
@@ -43,6 +43,19 @@ public class ChannelViewModel extends AndroidViewModel {
 
     public LiveData<List<Vote>> getAllVotes() {
         return allVotes;
+    }
+
+    public int getVoteValue(int user_id, int prop_id) { //Todo: Transform to querry
+        List<Vote> votes = allVotes.getValue();
+        if (votes != null) {
+            for (Vote vote : votes) {
+                if (user_id == vote.getId_user() && prop_id == vote.getId_proposition()) {
+                    return vote.getForOrAgainst();
+                }
+            }
+        }
+
+        return 0;
     }
 
     public void insertVote(Vote vote) {

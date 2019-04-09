@@ -1,13 +1,12 @@
-package com.example.revendiquons.repository;
+package com.example.revendiquons.db.repository;
 
 import android.app.Application;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.revendiquons.room.AppDatabase;
-import com.example.revendiquons.room.dao.VoteDao;
-import com.example.revendiquons.room.entity.Vote;
+import com.example.revendiquons.db.AppDatabase;
+import com.example.revendiquons.db.dao.VoteDao;
+import com.example.revendiquons.db.entity.Vote;
 
 import java.util.List;
 

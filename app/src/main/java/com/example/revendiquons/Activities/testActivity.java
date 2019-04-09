@@ -1,33 +1,11 @@
 package com.example.revendiquons.Activities;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.CompoundButton;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
-import com.example.revendiquons.RequestQueueSingleton;
-import com.example.revendiquons.repository.PropositionRepository;
-import com.example.revendiquons.repository.VoteRepository;
-import com.example.revendiquons.room.AppDatabase;
-import com.example.revendiquons.room.dao.PropositionDao;
-import com.example.revendiquons.room.entity.Proposition;
-import com.example.revendiquons.utils.Server;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.revendiquons.db.repository.PropositionRepository;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +20,11 @@ public class testActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_db);
+        setContentView(R.layout.proposition_child);
+        CompoundButton upBtn = findViewById(R.id.up_vote_btn);
+        upBtn.setChecked(true);
+
+        /*
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         //rp = new PropositionRepository(this.getApplication());
@@ -139,7 +121,7 @@ public class testActivity extends AppCompatActivity {
     }
 
     void getPropositionAPI(final Context context) {
-        String url = Server.address + "listeProp.php";
+        String url = Constants.address + "listeProp.php";
 
         final ArrayList<Proposition> propositions = new ArrayList<>();
 
@@ -178,11 +160,13 @@ public class testActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         });
 
         //Add request to queue
         RequestQueueSingleton.getInstance(context).addToRequestQueue(stringRequest);
+        */
     }
+
 }

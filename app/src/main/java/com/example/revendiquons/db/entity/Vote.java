@@ -1,10 +1,13 @@
-package com.example.revendiquons.room.entity;
+package com.example.revendiquons.db.entity;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(indices = {@Index(value = {"id_proposition"},
+        unique = true)})
 public class Vote {
     @ForeignKey(entity = Proposition.class,
             parentColumns = "id",
@@ -13,6 +16,7 @@ public class Vote {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int id_user;
+    @ColumnInfo(name = "id_proposition")
     private int id_proposition;
     private int forOrAgainst;
 

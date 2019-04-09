@@ -8,25 +8,22 @@ import com.example.revendiquons.R;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
-public class ParentViewHolder extends GroupViewHolder {
+class ParentPropViewHolder extends GroupViewHolder {
 
     private TextView score_text;
     private TextView title_text;
 
-    public ParentViewHolder(View itemView) {
+    ParentPropViewHolder(View itemView) {
         super(itemView);
         this.score_text = itemView.findViewById(R.id.proposition_main_score);
         this.title_text = itemView.findViewById(R.id.proposition_main_title);
-        Log.i("rcl", "Creating grp");
     }
 
-    public void setTitle(ExpandableGroup group) {
-        title_text.setText(group.getTitle());
+    void setTitle(String title) {
+        title_text.setText(title);
     }
 
-    public void setScore(ExpandableGroup group) {
-        int score = ((ExpandableProp)group).getScore();
-
+    void setScore(int score) {
         //Convert Score to string
         StringBuilder scoreString = new StringBuilder();
         if (score >= 1000) {

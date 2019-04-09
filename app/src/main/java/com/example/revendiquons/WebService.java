@@ -1,10 +1,6 @@
 package com.example.revendiquons;
 
-import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,14 +9,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.revendiquons.Activities.ChannelActivity;
-import com.example.revendiquons.Activities.RegisterActivity;
-import com.example.revendiquons.repository.DBOperationCallback;
-import com.example.revendiquons.repository.PropositionRepository;
-import com.example.revendiquons.room.entity.Proposition;
-import com.example.revendiquons.utils.Server;
+import com.example.revendiquons.utils.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,14 +34,14 @@ public class WebService {
     }
 
     public void getUserVotes(final String user_id, Response.Listener<String> responseListener) {
-        String url = Server.address + "getUserVotes.php";
+        String url = Constants.address + "getUserVotes.php";
 
         //Request a string response from the URL
         StringRequest stringRequest = new StringRequest (Request.Method.POST, url, responseListener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(appContext, "Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(appContext, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override //Override method of anonymous class StringRequest
@@ -67,14 +57,14 @@ public class WebService {
     }
 
     public void registerAPICall(final String mail, final String password, Response.Listener<String> responseListener) {
-        String url = Server.address + "register.php";
+        String url = Constants.address + "register.php";
 
         //Request a string response from the URL
         StringRequest stringRequest = new StringRequest (Request.Method.POST, url, responseListener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(appContext, "Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(appContext, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override //Override method of anonymous class StringRequest
@@ -91,12 +81,12 @@ public class WebService {
     }
 
     public void loginAPICall(final String email, final String password, Response.Listener<String> responseListener) {
-        String url = Server.address + "login.php";
+        String url = Constants.address + "login.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(appContext, "Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(appContext, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
@@ -113,7 +103,7 @@ public class WebService {
 
     public void createPropAPICall(final String user_id, final String title, final String desc) {
         Log.i("volley", "in create PropAPI Call");
-        String url = Server.address + "createProp.php";
+        String url = Constants.address + "createProp.php";
 
         //Request a string response from the URL
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -137,7 +127,7 @@ public class WebService {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(appContext, "Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(appContext, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override //Override method of anonymous class StringRequest
@@ -156,14 +146,14 @@ public class WebService {
     }
 
     public void getPropositionAPICall(Response.Listener<String> responseListener) {
-        String url = Server.address + "listeProp.php";
+        String url = Constants.address + "listeProp.php";
 
         //Request a string response from the URL
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(appContext, "Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(appContext, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         });
 

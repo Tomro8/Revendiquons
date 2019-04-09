@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import com.example.revendiquons.R;
 import com.example.revendiquons.WebService;
-import com.example.revendiquons.repository.DBOperationCallback;
-import com.example.revendiquons.repository.PropositionRepository;
-import com.example.revendiquons.room.entity.Proposition;
+import com.example.revendiquons.db.repository.DBOperationCallback;
+import com.example.revendiquons.db.repository.PropositionRepository;
+import com.example.revendiquons.db.entity.Proposition;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.Nullable;

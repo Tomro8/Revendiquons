@@ -1,6 +1,5 @@
 package com.example.revendiquons.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,23 +11,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
-import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.WebService;
-import com.example.revendiquons.room.AppDatabase;
-import com.example.revendiquons.utils.Server;
+import com.example.revendiquons.db.AppDatabase;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;

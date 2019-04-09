@@ -8,13 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.revendiquons.ExpandableRecyclerView.ExpandableProp;
+import com.example.revendiquons.ExpandableRecyclerView.ParentPropModel;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
-import com.example.revendiquons.ExpandableRecyclerView.ExpandedProp;
+import com.example.revendiquons.ExpandableRecyclerView.ChildPropModel;
 import com.example.revendiquons.R;
 import com.example.revendiquons.ViewModel.ChannelViewModel;
-import com.example.revendiquons.room.entity.Proposition;
-import com.example.revendiquons.room.entity.Vote;
+import com.example.revendiquons.db.entity.Proposition;
+import com.example.revendiquons.db.entity.Vote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,6 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +31,13 @@ public class ChannelActivity extends AppCompatActivity {
     private ChannelViewModel viewModel;
     private Button createProp_btn;
     private RecyclerView recyclerView;
+
     private ExpandablePropAdapter expandableAdapter;
+    private List<ParentPropModel> parentPropModelList;
+    private List<ChildPropModel> childPropModel;
+
+
+
 /*
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -53,6 +58,13 @@ public class ChannelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_channel);
         Log.i("Tom", "ChannelActivity Created");
 
+        //todo: testing only
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("user_id", 1);
+        editor.apply();
+
+
         //Set up RecyclerView
         recyclerView = findViewById(R.id.my_recycler_view);
 
@@ -67,19 +79,19 @@ public class ChannelActivity extends AppCompatActivity {
             public void onChanged(List<Proposition> propositions) {
                 Log.i("UI", "Channel UI refreshed, props: " + propositions.toString());
 
-                List<ExpandableProp> parentGrp = new ArrayList<>();
+                parentPropModelList = new ArrayList<>();
 
                 for (Proposition prop : propositions) {
-                    ExpandedProp child = new ExpandedProp(prop.getDescription(), prop.getId());
-                    List<ExpandedProp> childGrp = new ArrayList<>();
-                    childGrp.add(child);
+                    int voteValue = viewModel.getVoteValue(prop.getUser_id(), prop.getId());
+                    List<ChildPropModel> childrenList = new ArrayList<>();
+                    childrenList.add(new ChildPropModel(prop.getDescription(), voteValue));
 
-                    ExpandableProp parent = new ExpandableProp(prop, childGrp);
-                    parentGrp.add(parent);
+                    ParentPropModel parent = new ParentPropModel(prop, childrenList);
+                    parentPropModelList.add(parent);
                 }
 
                 //Set adapter
-                expandableAdapter = new ExpandablePropAdapter(parentGrp);
+                expandableAdapter = new ExpandablePropAdapter(parentPropModelList);
                 recyclerView.setAdapter(expandableAdapter);
 
                 //viewModel.getAllProps().removeObservers(ChannelActivity.this);
@@ -90,6 +102,25 @@ public class ChannelActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Vote> votes) {
                 Log.i("UI", "Vote modified: " + votes.toString());
+
+                //Only if view is ready
+                if (expandableAdapter != null) {
+                    //Applique le vote à l'UI (pour que l'iconne reste affiché comme tel)
+
+                    //On parcourt Modèles des parents des propositions, on compare à la liste de vote jusqu'à trouver celui qui correspond.
+                    //On change la valeur du vote dans le modèle de l'enfant
+                    for (ParentPropModel parentPropModel : parentPropModelList) {
+                        for (Vote vote : votes) {
+                            Proposition bindProp = parentPropModel.getProposition();
+                            if (bindProp.getId() == vote.getId_proposition()) {
+                                parentPropModel.getItems().get(0).setVoteValue(vote.getForOrAgainst());
+                            }
+                        }
+                    }
+
+                    //On affiche les changements
+                    expandableAdapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -102,15 +133,13 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int user_id = preferences.getInt("user_id", -1); //-1 = default value
     }
 
     public ChannelViewModel getViewModel() {
         return  viewModel;
     }
 
-    public void heyhey() {
+    public void heyhey() { //todo delete
         expandableAdapter.notifyDataSetChanged();
         //expandableAdapter.
     }

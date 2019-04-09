@@ -22,8 +22,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.revendiquons.R;
-import com.example.revendiquons.room.AppDatabase;
-import com.example.revendiquons.room.entity.User;
+import com.example.revendiquons.db.AppDatabase;
+import com.example.revendiquons.db.entity.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,6 +1,6 @@
-package com.example.revendiquons.room.dao;
+package com.example.revendiquons.db.dao;
 
-import com.example.revendiquons.room.entity.Proposition;
+import com.example.revendiquons.db.entity.Proposition;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-import io.reactivex.Single;
 
 @Dao
 public interface PropositionDao {

@@ -1,10 +1,13 @@
-package com.example.revendiquons.room.entity;
+package com.example.revendiquons.db.entity;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Proposition {
+public class Proposition implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int user_id;
@@ -84,5 +87,20 @@ public class Proposition {
                 ", positive=" + positive +
                 ", negative=" + negative +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeInt(user_id);
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeInt(positive);
+        parcel.writeInt(negative);
     }
 }

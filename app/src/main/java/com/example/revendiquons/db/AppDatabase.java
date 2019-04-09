@@ -1,26 +1,20 @@
-package com.example.revendiquons.room;
+package com.example.revendiquons.db;
 
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.example.revendiquons.RequestQueueSingleton;
 import com.example.revendiquons.WebService;
-import com.example.revendiquons.repository.DBOperationCallback;
-import com.example.revendiquons.repository.PropositionRepository;
-import com.example.revendiquons.repository.VoteRepository;
-import com.example.revendiquons.room.dao.PropositionDao;
-import com.example.revendiquons.room.dao.UserDao;
-import com.example.revendiquons.room.dao.VoteDao;
-import com.example.revendiquons.room.entity.Proposition;
-import com.example.revendiquons.room.entity.User;
-import com.example.revendiquons.room.entity.Vote;
-import com.example.revendiquons.utils.Server;
+import com.example.revendiquons.db.repository.DBOperationCallback;
+import com.example.revendiquons.db.repository.PropositionRepository;
+import com.example.revendiquons.db.repository.VoteRepository;
+import com.example.revendiquons.db.dao.PropositionDao;
+import com.example.revendiquons.db.dao.UserDao;
+import com.example.revendiquons.db.dao.VoteDao;
+import com.example.revendiquons.db.entity.Proposition;
+import com.example.revendiquons.db.entity.User;
+import com.example.revendiquons.db.entity.Vote;
 
 import org.json.JSONArray;
 import org.json.JSONException;

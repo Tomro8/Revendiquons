@@ -25,4 +25,7 @@ public interface VoteDao {
 
     @Delete
     public void deleteVotes(Vote... votes);
+
+    @Query("DELETE FROM Vote")
+    public void nukeTable();
 }

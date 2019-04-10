@@ -3,6 +3,7 @@ package com.example.revendiquons.ExpandableRecyclerView;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 //The data to be put in the expanded area
 
@@ -49,6 +50,7 @@ public class ChildPropModel implements Parcelable {
     }
 
     public int getVoteValue() {
+        Log.i("rcl","in child model, return vote value: " + voteValue);
         return voteValue;
     }
 
@@ -58,5 +60,13 @@ public class ChildPropModel implements Parcelable {
 
     public void setVoteValue(int voteValue) {
         this.voteValue = voteValue;
+    }
+
+    @Override
+    public String toString() {
+        return "ChildPropModel{" +
+                "description='" + description + '\'' +
+                ", voteValue=" + voteValue +
+                '}';
     }
 }

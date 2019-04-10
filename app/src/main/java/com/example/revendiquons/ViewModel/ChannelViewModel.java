@@ -37,9 +37,11 @@ public class ChannelViewModel extends AndroidViewModel {
         propRepository.insert(prop, dbOperationCallback);
     }
 
+    /*
     public void updateProp(Proposition prop) {
         propRepository.update(prop);
     }
+    */
 
     public LiveData<List<Vote>> getAllVotes() {
         return allVotes;

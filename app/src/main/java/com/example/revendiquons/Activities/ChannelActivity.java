@@ -36,21 +36,8 @@ public class ChannelActivity extends AppCompatActivity {
     private List<ParentPropModel> parentPropModelList;
     private List<ChildPropModel> childPropModel;
 
-
-
-/*
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        expandableAdapter.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        expandableAdapter.onRestoreInstanceState(savedInstanceState);
-    }
-    */
+    private Observer<List<Proposition>> loadPropositionObserver;
+    private Observer<List<Proposition>> refreshPropositionObserver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,12 +59,11 @@ public class ChannelActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ChannelActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        //Observe on viewModel
-        viewModel = ViewModelProviders.of(this).get(ChannelViewModel.class);
-        viewModel.getAllProps().observe(this, new Observer<List<Proposition>>() {
+        //Setup observer
+        loadPropositionObserver = new Observer<List<Proposition>>() {
             @Override
             public void onChanged(List<Proposition> propositions) {
-                Log.i("UI", "Channel UI refreshed, props: " + propositions.toString());
+                Log.i("UI", "Channel UI reloaded, props: " + propositions.toString());
 
                 parentPropModelList = new ArrayList<>();
 
@@ -96,28 +82,51 @@ public class ChannelActivity extends AppCompatActivity {
 
                 //viewModel.getAllProps().removeObservers(ChannelActivity.this);
             }
-        });
+        };
 
+        //Observer pour refresh uniquement le score des view des propositions
+        refreshPropositionObserver = new Observer<List<Proposition>>() {
+            @Override
+            public void onChanged(List<Proposition> propositions) {
+                Log.i("UI", "Channel UI refreshed, props: " + propositions.toString());
+                if (expandableAdapter != null) {
+                    //Pour chaque view proposition, on met le score de la proposition correspondante
+                    for (ParentPropModel parentPropModel : parentPropModelList) {
+                        for (Proposition prop : propositions) {
+                            if (prop.getId() == parentPropModel.getProposition().getId()) {
+                                parentPropModel.setScore(prop.getPositive() - prop.getNegative());
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        //Observe on viewModel
+        viewModel = ViewModelProviders.of(this).get(ChannelViewModel.class);
+        setLoadPropositionObserver();
+
+        //Applique les votes aux proposition sur l'UI (pour que l'iconne reste affiché comme tel)
         viewModel.getAllVotes().observe(this, new Observer<List<Vote>>() {
             @Override
             public void onChanged(List<Vote> votes) {
                 Log.i("UI", "Vote modified: " + votes.toString());
-
                 //Only if view is ready
                 if (expandableAdapter != null) {
-                    //Applique le vote à l'UI (pour que l'iconne reste affiché comme tel)
-
                     //On parcourt Modèles des parents des propositions, on compare à la liste de vote jusqu'à trouver celui qui correspond.
                     //On change la valeur du vote dans le modèle de l'enfant
                     for (ParentPropModel parentPropModel : parentPropModelList) {
                         for (Vote vote : votes) {
                             Proposition bindProp = parentPropModel.getProposition();
                             if (bindProp.getId() == vote.getId_proposition()) {
-                                parentPropModel.getItems().get(0).setVoteValue(vote.getForOrAgainst());
+                                //Log.i("rcl","in refresh UI, prop: " + bindProp + "\n hash: " + bindProp.hashCode());
+                                ChildPropModel childPropModel = parentPropModel.getItems().get(0);
+                                childPropModel.setVoteValue(vote.getForOrAgainst());
+
+                                //Log.i("rcl","in observer, childmodel: " + parentPropModel.getItems().get(0).toString());
                             }
                         }
                     }
-
                     //On affiche les changements
                     expandableAdapter.notifyDataSetChanged();
                 }
@@ -141,7 +150,25 @@ public class ChannelActivity extends AppCompatActivity {
 
     public void heyhey() { //todo delete
         expandableAdapter.notifyDataSetChanged();
-        //expandableAdapter.
     }
 
+    public void setLoadPropositionObserver() {
+        Log.i("UI", "LoadProposition Observer setup");
+        viewModel.getAllProps().observe(this, loadPropositionObserver);
+    }
+
+    public void removeLoadPropositionObserver() {
+        Log.i("UI", "LoadProposition Observer removed");
+        viewModel.getAllProps().removeObserver(loadPropositionObserver);
+    }
+
+    public void setRefreshPropositionObserver() {
+        Log.i("UI", "Refresh Proposition Observer setup");
+        viewModel.getAllProps().observe(this, refreshPropositionObserver);
+    }
+
+    public void removeRefreshPropositionObserver() {
+        Log.i("UI", "Refresh proposition Observer removed");
+        viewModel.getAllProps().removeObserver(refreshPropositionObserver);
+    }
 }

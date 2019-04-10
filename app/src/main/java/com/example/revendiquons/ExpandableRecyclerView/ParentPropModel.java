@@ -1,5 +1,7 @@
 package com.example.revendiquons.ExpandableRecyclerView;
 
+import android.util.Log;
+
 import com.example.revendiquons.db.entity.Proposition;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
@@ -23,5 +25,11 @@ public class ParentPropModel extends ExpandableGroup<ChildPropModel> {
     int getScore() {
         return score;
     }
-    public Proposition getProposition() { return prop; }
+    public void setScore(int score) {
+        this.score = score;
+    }
+    public Proposition getProposition() {
+        Log.i("rcl","in parentModel, returning prop: " + prop.toString() + "\n hash: " + prop.hashCode());
+        return prop; }
+
 }

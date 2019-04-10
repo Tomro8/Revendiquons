@@ -1,6 +1,12 @@
 package com.example.revendiquons;
 
+import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
+
+import com.example.revendiquons.db.AppDatabase;
+import com.example.revendiquons.db.repository.PropositionRepository;
+
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -22,5 +28,9 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.example.revendiquons", appContext.getPackageName());
+
+        Toast.makeText(appContext, "TEST IS RUNNING !", Toast.LENGTH_SHORT).show();
+
+        AppDatabase.getAppDatabase(appContext).PropositionDao().deletePropositions();
     }
 }

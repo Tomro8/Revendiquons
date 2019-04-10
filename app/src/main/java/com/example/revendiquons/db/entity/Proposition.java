@@ -16,6 +16,27 @@ public class Proposition implements Parcelable {
     private int positive;
     private int negative;
 
+    protected Proposition(Parcel in) {
+        id = in.readInt();
+        user_id = in.readInt();
+        title = in.readString();
+        description = in.readString();
+        positive = in.readInt();
+        negative = in.readInt();
+    }
+
+    public static final Creator<Proposition> CREATOR = new Creator<Proposition>() {
+        @Override
+        public Proposition createFromParcel(Parcel in) {
+            return new Proposition(in);
+        }
+
+        @Override
+        public Proposition[] newArray(int size) {
+            return new Proposition[size];
+        }
+    };
+
     public int getId() {
         return id;
     }
@@ -68,6 +89,18 @@ public class Proposition implements Parcelable {
         this.positive = positive + 1;
     }
 
+    public void decPositive() {
+        this.positive = positive - 1;
+    }
+
+    public void incNegative() {
+        this.negative = negative + 1;
+    }
+
+    public void decNegative() {
+        this.negative = negative -1;
+    }
+
     public Proposition(int id, int user_id, String title, String description, int positive, int negative) {
         this.id = id;
         this.user_id = user_id;
@@ -86,6 +119,7 @@ public class Proposition implements Parcelable {
                 ", description='" + description + '\'' +
                 ", positive=" + positive +
                 ", negative=" + negative +
+                ", hashcode=" + hashCode() +
                 '}';
     }
 

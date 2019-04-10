@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.example.revendiquons.Activities.ChannelActivity;
 import com.example.revendiquons.Activities.PropCreationActivity;
 import com.example.revendiquons.R;
 import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.entity.Vote;
+import com.example.revendiquons.db.repository.DBBeforeOperation;
+import com.example.revendiquons.db.repository.DBOperationCallback;
+import com.example.revendiquons.db.repository.PropositionRepository;
 import com.example.revendiquons.db.repository.VoteRepository;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
@@ -22,6 +26,7 @@ public class ChildPropViewHolder extends ChildViewHolder {
     private CompoundButton whiteBtn;
     private CompoundButton downBtn;
     private TextView description;
+    private int voteValue;
 
     private Proposition proposition;
     //private ChannelViewModel channelViewModel;
@@ -40,16 +45,21 @@ public class ChildPropViewHolder extends ChildViewHolder {
                     whiteBtn.setChecked(false);
                     downBtn.setChecked(false);
 
+
                     //Increase Positive Counter
                     Log.i("rcl","Before increasing counter");
+                    proposition.incPositive();
+
+                    //Log.i("rcl","after prop:" + proposition + " hash: " + proposition.hashCode());
 
                     //Méthode 2 : changer valeur prop view et refresh UI.
                     //proposition.incPositive();
                     //((ChannelActivity) itemView.getContext()).heyhey();
-                    //channelViewModel.updateProp(proposition);
+                    //PropositionRepository.updateProp(proposition);
 
                 } else {
                     //Decrease Positive Counter
+                    proposition.decPositive();
                 }
                 //Méthode 1 : update DB
                 forwardVote();
@@ -80,8 +90,10 @@ public class ChildPropViewHolder extends ChildViewHolder {
                     upBtn.setChecked(false);
                     whiteBtn.setChecked(false);
                     //Increase Negative Counter
+                    proposition.incNegative();
                 } else {
                     //Decrease Negative Counter
+                    proposition.decNegative();
                 }
                 forwardVote();
             }
@@ -89,14 +101,33 @@ public class ChildPropViewHolder extends ChildViewHolder {
 
     }
 
-    void forwardVote() {
+    private void forwardVote() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
         int user_id = preferences.getInt("user_id", -1); //-1 = default value
-        Vote vote = new Vote(0, user_id, proposition.getId(), getVoteValue());
+        updateVoteValue();
+        Vote vote = new Vote(0, user_id, proposition.getId(), voteValue);
 
         //Adding vote to DB
         VoteRepository.getInstance((Application)itemView.getContext().getApplicationContext()).
                 insert(vote);
+
+        //Log.i("rcl","in child view, prop: " + proposition + "\n hash: " + proposition.hashCode());
+        //Todo: Forward to remote
+
+        //Todo: update Prop score into DB
+        PropositionRepository.getInstance((Application)itemView.getContext().getApplicationContext()).
+                update(proposition, new DBOperationCallback() {
+                    @Override
+                    public void onOperationCompleted() {
+
+                    }
+                }, new DBBeforeOperation() {
+                    @Override
+                    public void onPreExecute() {
+                        ((ChannelActivity) itemView.getContext()).removeLoadPropositionObserver();
+                        ((ChannelActivity) itemView.getContext()).setRefreshPropositionObserver();
+                    }
+                });
     }
 
     void setDescription(String description) {
@@ -105,6 +136,10 @@ public class ChildPropViewHolder extends ChildViewHolder {
 
     public void setProposition(Proposition proposition) {
         this.proposition = proposition;
+    }
+
+    void setVoteValue(int voteValue) {
+        this.voteValue = voteValue;
     }
 
     void setButtonState(int voteValue) {
@@ -138,16 +173,18 @@ public class ChildPropViewHolder extends ChildViewHolder {
         description.setOnClickListener(listener);
     }
 
-    int getVoteValue() {
+    private void updateVoteValue() {
         if (upBtn.isChecked()) {
-            return 1;
+            voteValue = 1;
         } else if (downBtn.isChecked()) {
-            return -1;
+            voteValue = -1;
         } else if (whiteBtn.isChecked()) {
-            return 2;
+            voteValue = 2;
         } else {
-            return 0;
+            voteValue = 0;
         }
+        Log.i("rcl","in child view, vote value updated to: " + voteValue);
     }
+
 
 }

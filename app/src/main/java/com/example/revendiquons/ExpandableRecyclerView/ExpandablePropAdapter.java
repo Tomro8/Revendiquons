@@ -74,6 +74,7 @@ public class ExpandablePropAdapter extends ExpandableRecyclerViewAdapter<ParentP
         holder.setProposition(((ParentPropModel)group).getProposition());
         holder.setDescription(childModel.getDescription());
         holder.setButtonState(childModel.getVoteValue());
+        holder.setVoteValue(childModel.getVoteValue());
     }
 
     @Override

@@ -4,7 +4,9 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.revendiquons.Activities.testActivity;
 import com.example.revendiquons.db.AppDatabase;
+import com.example.revendiquons.db.dao.PropositionDao;
 import com.example.revendiquons.db.dao.VoteDao;
 import com.example.revendiquons.db.entity.Vote;
 
@@ -51,5 +53,26 @@ public class VoteRepository {
             voteDao.insertAll(votes);
             return null;
         }
+    }
+
+    public void deleteVotes() {
+        new deleteAsyncTask(voteDao).execute();
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private VoteDao voteDao;
+
+        deleteAsyncTask(VoteDao voteDao) {
+            this.voteDao = voteDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            voteDao.nukeTable();
+            Log.i("db", "Delete props from db: ");
+            return null;
+        }
+
     }
 }

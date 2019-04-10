@@ -48,6 +48,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being opened");
                     populatePropEntity(context);
+                    //todo empty table before hand
                     //Todo: animation chargement
                 }
             };
@@ -84,6 +85,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     if (json.has("error")) {
                         Log.i("volley", "Error from server: " + json.get("error"));
                     } else {
+                        //Populate Table
                         JSONArray jsonArray = json.getJSONArray("votes");
                         Log.i("volley", "json array: " + jsonArray);
                         for (int i=0; i<jsonArray.length(); i++) {
@@ -123,7 +125,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         int positive = json.getJSONObject(i).getInt("positive");
                         int negative = json.getJSONObject(i).getInt("negative");
 
-                        //insert(context, new Proposition(id, user_id, title, description, positive, negative));
+                        //Populate Table
                         PropositionRepository.getInstance((Application)context).
                                 insert(new Proposition(id, user_id, title, description, positive, negative), new DBOperationCallback() {
                                     @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.revendiquons.Activities.testActivity;
 import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.dao.PropositionDao;
 import com.example.revendiquons.db.entity.Proposition;
@@ -37,22 +38,37 @@ public class PropositionRepository {
         return allProps;
     }
 
-    public void update(Proposition proposition) {
-        new VoteAsyncTask(propDao).execute(proposition);
+    public void update(Proposition proposition, DBOperationCallback dbOperationCallback, DBBeforeOperation dbBeforeOperation) {
+        new VoteAsyncTask(propDao, dbOperationCallback, dbBeforeOperation).execute(proposition);
     }
 
     private static class VoteAsyncTask extends AsyncTask<Proposition, Void, Void> {
 
         private PropositionDao propDao;
+        private DBOperationCallback dbOperationCallback;
+        private DBBeforeOperation dbBeforeOperation;
 
-        VoteAsyncTask(PropositionDao propDao) {
+        VoteAsyncTask(PropositionDao propDao, DBOperationCallback dbOperationCallback, DBBeforeOperation dbBeforeOperation) {
             this.propDao = propDao;
+            this.dbOperationCallback = dbOperationCallback;
+            this.dbBeforeOperation = dbBeforeOperation;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dbBeforeOperation.onPreExecute();
         }
 
         @Override
         protected Void doInBackground(Proposition... propositions) {
+            Log.i("db", "Updating Prop !");
             propDao.updatePropositions(propositions);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            dbOperationCallback.onOperationCompleted();
         }
     }
 
@@ -81,5 +97,26 @@ public class PropositionRepository {
         protected void onPostExecute(Void aVoid) {
             dbOperationCallback.onOperationCompleted();
         }
+    }
+
+    public void deletePropositions() {
+        new deleteAsyncTask(propDao).execute();
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private PropositionDao propDao;
+
+        deleteAsyncTask(PropositionDao propDao) {
+            this.propDao = propDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            propDao.nukeTable();
+            Log.i("db", "Delete props from db");
+            return null;
+        }
+
     }
 }

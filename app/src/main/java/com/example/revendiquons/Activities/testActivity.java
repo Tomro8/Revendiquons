@@ -1,17 +1,37 @@
 package com.example.revendiquons.Activities;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.R;
+import com.example.revendiquons.RequestQueueSingleton;
+import com.example.revendiquons.db.AppDatabase;
+import com.example.revendiquons.db.dao.PropositionDao;
+import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.repository.PropositionRepository;
+import com.example.revendiquons.utils.Constants;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class testActivity extends AppCompatActivity {
-
     Button insertBtn;
     Button deleteBtn;
     Button readBtn;
@@ -20,11 +40,8 @@ public class testActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.proposition_child);
-        CompoundButton upBtn = findViewById(R.id.up_vote_btn);
-        upBtn.setChecked(true);
+        setContentView(R.layout.test_db);
 
-        /*
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         //rp = new PropositionRepository(this.getApplication());
@@ -77,7 +94,7 @@ public class testActivity extends AppCompatActivity {
     }
 
     public void delete() {
-        PropositionDao propDao = AppDatabase.getAppDatabase(this).PropositionDao();
+        PropositionDao propDao = AppDatabase.getAppDatabase(getApplicationContext()).PropositionDao();
         new deleteAsyncTask(propDao).execute();
     }
 
@@ -166,7 +183,6 @@ public class testActivity extends AppCompatActivity {
 
         //Add request to queue
         RequestQueueSingleton.getInstance(context).addToRequestQueue(stringRequest);
-        */
     }
 
 }

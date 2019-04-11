@@ -22,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class PropCreationActivity extends AppCompatActivity {
-    //todo: boutton cancel
+    //todo: boutton cancel / retour
     private Button createProp_btn;
     private TextInputLayout title_textInput;
     private TextInputLayout desc_textInput;

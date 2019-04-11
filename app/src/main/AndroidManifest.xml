@@ -16,9 +16,6 @@
         <activity android:name=".Activities.LoginActivity">
 
         </activity>
-        <activity android:name=".Activities.MainActivity">
-
-        </activity>
         <activity android:name=".Activities.ChannelActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

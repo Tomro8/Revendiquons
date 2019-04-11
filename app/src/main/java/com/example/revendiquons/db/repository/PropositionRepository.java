@@ -73,7 +73,6 @@ public class PropositionRepository {
     }
 
     public void insert(Proposition prop, DBOperationCallback dbOperationCallback) {
-        Log.i("db", "PropRepo inserting: " + prop);
         new insertAsyncTask(propDao, dbOperationCallback).execute(prop);
     }
 
@@ -90,6 +89,7 @@ public class PropositionRepository {
         @Override
         protected Void doInBackground(Proposition... propositions) {
             propDao.insertAll(propositions);
+            Log.i("db", "PropRepo inserted: " + propositions);
             return null;
         }
 

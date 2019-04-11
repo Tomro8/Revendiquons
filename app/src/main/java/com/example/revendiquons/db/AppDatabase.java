@@ -2,6 +2,8 @@ package com.example.revendiquons.db;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Response;
@@ -41,14 +43,14 @@ public abstract class AppDatabase extends RoomDatabase {
                 @Override
                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being created");
-                    populatePropEntity(context);
+                    populateDB(context);
                 }
 
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being opened");
-                    populatePropEntity(context);
-                    //todo empty table before hand
+                    populateDB(context);
+
                     //Todo: animation chargement
                 }
             };
@@ -59,20 +61,29 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    private static void populateDB(Context context) {
+        populatePropEntity(context);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context); //Todo: replace with user in DB
+        int user_id = preferences.getInt("user_id", -1); //-1 = default value
+
+        populateVoteEntity(context, user_id);
+    }
+
     public static void destroyInstance() {
         INSTANCE = null;
     }
 
-    public void populateVoteEntity(Context context, int user_id) {
+    public static void populateVoteEntity(Context context, int user_id) {
         Log.i("db", "Population votes from userid: " + user_id);
-        WebService.getInstance(context).getUserVotes(Integer.toString(user_id), getUserVoteAPICallback(context));
+        WebService.getInstance(context).getUserVotes(Integer.toString(user_id), populateVoteEntityCallback(context));
     }
 
     private static void populatePropEntity(Context context) {
         WebService.getInstance(context.getApplicationContext()).getPropositionAPICall(populatePropEntityCallback(context));
     }
 
-    private static Response.Listener<String> getUserVoteAPICallback(final Context context) {
+    private static Response.Listener<String> populateVoteEntityCallback(final Context context) {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -85,6 +96,9 @@ public abstract class AppDatabase extends RoomDatabase {
                     if (json.has("error")) {
                         Log.i("volley", "Error from server: " + json.get("error"));
                     } else {
+                        //Empty Table
+                        VoteRepository.getInstance((Application)context).deleteVotes();
+
                         //Populate Table
                         JSONArray jsonArray = json.getJSONArray("votes");
                         Log.i("volley", "json array: " + jsonArray);
@@ -96,7 +110,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                             Vote vote = new Vote(id, user_id, proposition_id, voteValue);
                             VoteRepository.getInstance((Application)context).insert(vote);
-                            Log.i("db", "insert vote into DB: " + vote);
                         }
                     }
                 } catch (JSONException e) {
@@ -111,8 +124,11 @@ public abstract class AppDatabase extends RoomDatabase {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("volley", "response from server: " + response);
+                Log.i("volley", "populate prop entity: response from server: " + response);
                 try {
+                    //Empty table
+                    PropositionRepository.getInstance((Application)context).deletePropositions();
+
                     //Convert string response to JSONObject
                     JSONArray json = new JSONArray(response);
                     Log.i("volley", "json: " + json);

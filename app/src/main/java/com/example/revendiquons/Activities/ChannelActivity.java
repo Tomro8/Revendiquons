@@ -12,7 +12,6 @@ import com.example.revendiquons.ExpandableRecyclerView.ParentPropModel;
 import com.example.revendiquons.ExpandableRecyclerView.ExpandablePropAdapter;
 import com.example.revendiquons.ExpandableRecyclerView.ChildPropModel;
 import com.example.revendiquons.R;
-import com.example.revendiquons.ViewModel.ChannelViewModel;
 import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.entity.Vote;
 
@@ -34,7 +33,6 @@ public class ChannelActivity extends AppCompatActivity {
 
     private ExpandablePropAdapter expandableAdapter;
     private List<ParentPropModel> parentPropModelList;
-    private List<ChildPropModel> childPropModel;
 
     private Observer<List<Proposition>> loadPropositionObserver;
     private Observer<List<Proposition>> refreshPropositionObserver;
@@ -79,8 +77,6 @@ public class ChannelActivity extends AppCompatActivity {
                 //Set adapter
                 expandableAdapter = new ExpandablePropAdapter(parentPropModelList);
                 recyclerView.setAdapter(expandableAdapter);
-
-                //viewModel.getAllProps().removeObservers(ChannelActivity.this);
             }
         };
 
@@ -119,14 +115,12 @@ public class ChannelActivity extends AppCompatActivity {
                         for (Vote vote : votes) {
                             Proposition bindProp = parentPropModel.getProposition();
                             if (bindProp.getId() == vote.getId_proposition()) {
-                                //Log.i("rcl","in refresh UI, prop: " + bindProp + "\n hash: " + bindProp.hashCode());
                                 ChildPropModel childPropModel = parentPropModel.getItems().get(0);
                                 childPropModel.setVoteValue(vote.getForOrAgainst());
-
-                                //Log.i("rcl","in observer, childmodel: " + parentPropModel.getItems().get(0).toString());
                             }
                         }
                     }
+
                     //On affiche les changements
                     expandableAdapter.notifyDataSetChanged();
                 }
@@ -142,14 +136,6 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public ChannelViewModel getViewModel() {
-        return  viewModel;
-    }
-
-    public void heyhey() { //todo delete
-        expandableAdapter.notifyDataSetChanged();
     }
 
     public void setLoadPropositionObserver() {

@@ -29,11 +29,9 @@ public class ChildPropViewHolder extends ChildViewHolder {
     private int voteValue;
 
     private Proposition proposition;
-    //private ChannelViewModel channelViewModel;
 
     ChildPropViewHolder(final View itemView) {
         super(itemView);
-        //this.channelViewModel = ((ChannelActivity) itemView.getContext()).getViewModel();
         this.description = itemView.findViewById(R.id.drop_down_description);
 
         upBtn = itemView.findViewById(R.id.up_vote_btn);
@@ -45,23 +43,12 @@ public class ChildPropViewHolder extends ChildViewHolder {
                     whiteBtn.setChecked(false);
                     downBtn.setChecked(false);
 
-
                     //Increase Positive Counter
-                    Log.i("rcl","Before increasing counter");
                     proposition.incPositive();
-
-                    //Log.i("rcl","after prop:" + proposition + " hash: " + proposition.hashCode());
-
-                    //Méthode 2 : changer valeur prop view et refresh UI.
-                    //proposition.incPositive();
-                    //((ChannelActivity) itemView.getContext()).heyhey();
-                    //PropositionRepository.updateProp(proposition);
-
                 } else {
                     //Decrease Positive Counter
                     proposition.decPositive();
                 }
-                //Méthode 1 : update DB
                 forwardVote();
             }
         });
@@ -111,10 +98,9 @@ public class ChildPropViewHolder extends ChildViewHolder {
         VoteRepository.getInstance((Application)itemView.getContext().getApplicationContext()).
                 insert(vote);
 
-        //Log.i("rcl","in child view, prop: " + proposition + "\n hash: " + proposition.hashCode());
         //Todo: Forward to remote
 
-        //Todo: update Prop score into DB
+        //Forward score updated Prop to DB
         PropositionRepository.getInstance((Application)itemView.getContext().getApplicationContext()).
                 update(proposition, new DBOperationCallback() {
                     @Override

@@ -51,6 +51,7 @@ public class VoteRepository {
         @Override
         protected Void doInBackground(Vote... votes) {
             voteDao.insertAll(votes);
+            Log.i("db", "Insert votes into DB: " + votes);
             return null;
         }
     }
@@ -70,7 +71,7 @@ public class VoteRepository {
         @Override
         protected Void doInBackground(Void... voids) {
             voteDao.nukeTable();
-            Log.i("db", "Delete props from db: ");
+            Log.i("db", "Delete votes from db");
             return null;
         }
 

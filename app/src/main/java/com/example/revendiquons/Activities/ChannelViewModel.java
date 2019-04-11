@@ -1,4 +1,4 @@
-package com.example.revendiquons.ViewModel;
+package com.example.revendiquons.Activities;
 
 import android.app.Application;
 import android.util.Log;

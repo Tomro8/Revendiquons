@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class ChildPropViewHolder extends ChildViewHolder {
 
     private CompoundButton upBtn;
-    private CompoundButton whiteBtn;
+    //private CompoundButton whiteBtn;
     private CompoundButton downBtn;
     private TextView description;
     private int voteValue;
@@ -43,33 +43,19 @@ public class ChildPropViewHolder extends ChildViewHolder {
         upBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //La logique est inversée, car le btn est déjà clické lorsque l'on arrive ici
+                //La logique est inversée, car le btn est déjà cliqué lorsque l'on arrive ici
                 if (upBtn.isChecked()) {
-                    whiteBtn.setChecked(false);
-                    downBtn.setChecked(false);
-
                     //Increase Positive Counter
                     proposition.incPositive();
+
+                    if (downBtn.isChecked()) {
+                        downBtn.setChecked(false);
+                        proposition.decNegative();
+                    }
+
                 } else {
                     //Decrease Positive Counter
                     proposition.decPositive();
-                }
-                forwardVote();
-            }
-        });
-
-        //todo: remove white btn ?
-        whiteBtn = itemView.findViewById(R.id.white_vote_btn);
-        whiteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("Tom", "btn2 clicked");
-                if (whiteBtn.isChecked()) {
-                    upBtn.setChecked(false);
-                    downBtn.setChecked(false);
-                    //Increase Neutral Counter
-                } else {
-                    //Decrease Neutral Counter
                 }
                 forwardVote();
             }
@@ -79,12 +65,17 @@ public class ChildPropViewHolder extends ChildViewHolder {
         downBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (downBtn.isChecked()) {
-                    upBtn.setChecked(false);
-                    whiteBtn.setChecked(false);
+                if (downBtn.isChecked()) { //downBtn est passé check à ce click
+                    //On décrémente donc le score de la proposition et on décoche l'autre bouton s'il est coché
+
                     //Increase Negative Counter
                     proposition.incNegative();
-                } else {
+
+                    if (upBtn.isChecked()) {
+                        upBtn.setChecked(false);
+                        proposition.decPositive();
+                    }
+                } else { //downBtn est passé unChecked à ce click
                     //Decrease Negative Counter
                     proposition.decNegative();
                 }
@@ -150,6 +141,10 @@ public class ChildPropViewHolder extends ChildViewHolder {
         this.voteValue = voteValue;
     }
 
+    void setDescriptionClickListener(View.OnClickListener listener) {
+        description.setOnClickListener(listener);
+    }
+
     void setButtonState(int voteValue) {
         Log.i("rcl", "Setting btn state: " + voteValue);
 
@@ -157,28 +152,24 @@ public class ChildPropViewHolder extends ChildViewHolder {
             case -1:
                 downBtn.setChecked(true);
                 upBtn.setChecked(false);
-                whiteBtn.setChecked(false);
+                //whiteBtn.setChecked(false);
                 break;
             case 2: //Neutral
                 downBtn.setChecked(false);
                 upBtn.setChecked(false);
-                whiteBtn.setChecked(true);
+                //whiteBtn.setChecked(true);
                 break;
             case 1:
                 downBtn.setChecked(false);
                 upBtn.setChecked(true);
-                whiteBtn.setChecked(false);
+                //whiteBtn.setChecked(false);
                 break;
             case 0:
             default :
                 downBtn.setChecked(false);
                 upBtn.setChecked(false);
-                whiteBtn.setChecked(false);
+                //whiteBtn.setChecked(false);
         }
-    }
-
-    void setDescriptionClickListener(View.OnClickListener listener) {
-        description.setOnClickListener(listener);
     }
 
     private void updateVoteValue() {
@@ -186,13 +177,11 @@ public class ChildPropViewHolder extends ChildViewHolder {
             voteValue = 1;
         } else if (downBtn.isChecked()) {
             voteValue = -1;
-        } else if (whiteBtn.isChecked()) {
-            voteValue = 2;
         } else {
             voteValue = 0;
         }
+
         Log.i("rcl","in child view, vote value updated to: " + voteValue);
     }
-
 
 }

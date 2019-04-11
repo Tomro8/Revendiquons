@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="12dp"
     android:paddingBottom="24dp"
     android:background="@color/colorPrimaryDark"
     >
@@ -14,7 +13,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/down_vote_btn"
         android:layout_marginStart="20dp"
         android:background="@drawable/up_button_background"
         android:button="@android:color/transparent"
@@ -24,34 +22,25 @@
         android:id="@+id/down_vote_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/up_vote_btn"
-        app:layout_constraintRight_toLeftOf="@+id/white_vote_btn"
+        app:layout_constraintTop_toBottomOf="@+id/up_vote_btn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/down_button_background"
-        android:button="@android:color/transparent"
-        android:checked="false"/>
-
-    <com.example.revendiquons.widgets.myCompoundBtn
-        android:id="@+id/white_vote_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/down_vote_btn"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/neutral_btn_background"
         android:button="@android:color/transparent"
         android:checked="false"/>
 
     <TextView
         android:id="@+id/drop_down_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/white_vote_btn"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/up_vote_btn"
         app:layout_constraintRight_toRightOf="parent"
-        android:gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="start|top"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

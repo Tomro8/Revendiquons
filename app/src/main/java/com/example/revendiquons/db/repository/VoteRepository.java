@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.volley.toolbox.StringRequest;
 import com.example.revendiquons.Activities.testActivity;
 import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.dao.PropositionDao;
@@ -38,7 +39,6 @@ public class VoteRepository {
 
     public void insert(Vote vote) {
         new insertAsyncTask(voteDao).execute(vote);
-        Log.i("db", "VoteRepo, inserting: " + vote);
     }
 
     private static class insertAsyncTask extends AsyncTask<Vote, Void, Void> {
@@ -51,7 +51,13 @@ public class VoteRepository {
         @Override
         protected Void doInBackground(Vote... votes) {
             voteDao.insertAll(votes);
-            Log.i("db", "Insert votes into DB: " + votes);
+
+            StringBuilder str = new StringBuilder();
+            for (Vote vote : votes) {
+                str.append(vote.toString());
+            }
+
+            Log.i("db", "Insert votes into DB: " + str);
             return null;
         }
     }

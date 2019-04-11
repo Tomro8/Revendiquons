@@ -91,9 +91,14 @@ public class ChannelActivity extends AppCompatActivity {
                         for (Proposition prop : propositions) {
                             if (prop.getId() == parentPropModel.getProposition().getId()) {
                                 parentPropModel.setScore(prop.getPositive() - prop.getNegative());
+                                Log.i("UI","Setting score: " +
+                                        Integer.toString(prop.getPositive() - prop.getNegative()) +
+                                        " to prop: " + prop.getTitle());
                             }
                         }
                     }
+
+                    expandableAdapter.notifyDataSetChanged();
                 }
             }
         };

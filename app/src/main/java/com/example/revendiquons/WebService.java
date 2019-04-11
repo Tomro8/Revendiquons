@@ -6,9 +6,11 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.revendiquons.db.entity.Vote;
 import com.example.revendiquons.utils.Constants;
 
 import org.json.JSONException;
@@ -153,11 +155,32 @@ public class WebService {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("volley", error.toString());
-                Toast.makeText(appContext, "Constants Error", Toast.LENGTH_SHORT).show();
             }
         });
 
         //Add request to queue
+        RequestQueueSingleton.getInstance(appContext).addToRequestQueue(stringRequest);
+    }
+
+    public void forwardVoteToAPI(final Vote vote, Response.Listener<String> responseListener) {
+        String url = Constants.address + "vote.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("volley", error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", Integer.toString(vote.getId_user()));
+                params.put("prop_id", Integer.toString(vote.getId_proposition()));
+                params.put("forOrAgainst", Integer.toString(vote.getForOrAgainst()));
+                return params;
+            }
+        };
+
         RequestQueueSingleton.getInstance(appContext).addToRequestQueue(stringRequest);
     }
 }

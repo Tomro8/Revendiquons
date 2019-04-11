@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.android.volley.Response;
 import com.example.revendiquons.Activities.ChannelActivity;
 import com.example.revendiquons.Activities.PropCreationActivity;
 import com.example.revendiquons.R;
+import com.example.revendiquons.WebService;
 import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.entity.Vote;
@@ -19,6 +21,9 @@ import com.example.revendiquons.db.repository.DBOperationCallback;
 import com.example.revendiquons.db.repository.PropositionRepository;
 import com.example.revendiquons.db.repository.VoteRepository;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ChildPropViewHolder extends ChildViewHolder {
 
@@ -53,6 +58,7 @@ public class ChildPropViewHolder extends ChildViewHolder {
             }
         });
 
+        //todo: remove white btn ?
         whiteBtn = itemView.findViewById(R.id.white_vote_btn);
         whiteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +98,29 @@ public class ChildPropViewHolder extends ChildViewHolder {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
         int user_id = preferences.getInt("user_id", -1); //-1 = default value
         updateVoteValue();
-        Vote vote = new Vote(0, user_id, proposition.getId(), voteValue);
+        final Vote vote = new Vote(0, user_id, proposition.getId(), voteValue);
 
         //Adding vote to DB
         VoteRepository.getInstance((Application)itemView.getContext().getApplicationContext()).
                 insert(vote);
 
-        //Todo: Forward to remote
+        //Forward vote to remote
+        WebService.getInstance(itemView.getContext().getApplicationContext()).forwardVoteToAPI(vote, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject json = new JSONObject(response);
+
+                    if (json.has("success")) {
+                        Log.i("volley","Successfully forwared vote to remote:" + vote);
+                    } else {
+                        Log.i("volley","Failed to forward vote to remote");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         //Forward score updated Prop to DB
         PropositionRepository.getInstance((Application)itemView.getContext().getApplicationContext()).

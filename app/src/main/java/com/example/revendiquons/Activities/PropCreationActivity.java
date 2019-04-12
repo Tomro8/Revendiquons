@@ -27,22 +27,10 @@ public class PropCreationActivity extends AppCompatActivity {
     private TextInputLayout title_textInput;
     private TextInputLayout desc_textInput;
 
-    private CompositeDisposable compositeDisposable; //Todo: remove if no RxJava
-
-    @Override
-    protected void onDestroy() {
-        if (!compositeDisposable.isDisposed()) {
-            compositeDisposable.dispose();
-        }
-        super.onDestroy();
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creation);
-
-        compositeDisposable = new CompositeDisposable();
 
         //Do not display keyboard because edittext is on focus at activity start
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

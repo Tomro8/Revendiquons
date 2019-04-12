@@ -51,6 +51,7 @@ public class PropCreationActivity extends AppCompatActivity {
 
                 String title = title_textInput.getEditText().getText().toString();
                 String desc = desc_textInput.getEditText().getText().toString();
+                //todo : max length for title
 
                 final Proposition prop = new Proposition(0, user_id, title, desc, 0, 0);
 

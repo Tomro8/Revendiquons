@@ -56,6 +56,7 @@
                 android:minHeight="90dp"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
+                android:maxLength="70"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

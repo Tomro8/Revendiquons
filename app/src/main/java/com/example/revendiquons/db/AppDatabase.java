@@ -80,7 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void populatePropEntity(Context context) {
-        WebService.getInstance(context.getApplicationContext()).getPropositionAPICall(populatePropEntityCallback(context));
+        WebService.getInstance(context.getApplicationContext()).getAllPropositionsAPI(populatePropEntityCallback(context));
     }
 
     private static Response.Listener<String> populateVoteEntityCallback(final Context context) {

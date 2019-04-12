@@ -89,7 +89,13 @@ public class PropositionRepository {
         @Override
         protected Void doInBackground(Proposition... propositions) {
             propDao.insertAll(propositions);
-            Log.i("db", "PropRepo inserted: " + propositions);
+
+            StringBuilder str = new StringBuilder();
+            for (Proposition prop : propositions) {
+                str.append(prop);
+            }
+
+            Log.i("db", "PropRepo inserted: " + str);
             return null;
         }
 

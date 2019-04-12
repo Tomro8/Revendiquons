@@ -28,7 +28,6 @@ import org.json.JSONObject;
 public class ChildPropViewHolder extends ChildViewHolder {
 
     private CompoundButton upBtn;
-    //private CompoundButton whiteBtn;
     private CompoundButton downBtn;
     private TextView description;
     private int voteValue;
@@ -47,6 +46,7 @@ public class ChildPropViewHolder extends ChildViewHolder {
                 if (upBtn.isChecked()) {
                     //Increase Positive Counter
                     proposition.incPositive();
+
 
                     if (downBtn.isChecked()) {
                         downBtn.setChecked(false);
@@ -113,7 +113,7 @@ public class ChildPropViewHolder extends ChildViewHolder {
             }
         });
 
-        //Forward score updated Prop to DB
+        //Forward score updated Prop to local DB
         PropositionRepository.getInstance((Application)itemView.getContext().getApplicationContext()).
                 update(proposition, new DBOperationCallback() {
                     @Override

@@ -147,7 +147,7 @@ public class WebService {
         Log.i("volley", "Request added to queue");
     }
 
-    public void getPropositionAPICall(Response.Listener<String> responseListener) {
+    public void getAllPropositionsAPI(Response.Listener<String> responseListener) {
         String url = Constants.address + "listeProp.php";
 
         //Request a string response from the URL

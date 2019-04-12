@@ -25,9 +25,6 @@
         <activity android:name=".Activities.PropCreationActivity">
 
         </activity>
-        <activity android:name=".Activities.testActivity">
-
-        </activity>
     </application>
 
 </manifest>

@@ -12,10 +12,8 @@ import com.example.revendiquons.db.repository.DBOperationCallback;
 import com.example.revendiquons.db.repository.PropositionRepository;
 import com.example.revendiquons.db.repository.VoteRepository;
 import com.example.revendiquons.db.dao.PropositionDao;
-import com.example.revendiquons.db.dao.UserDao;
 import com.example.revendiquons.db.dao.VoteDao;
 import com.example.revendiquons.db.entity.Proposition;
-import com.example.revendiquons.db.entity.User;
 import com.example.revendiquons.db.entity.Vote;
 
 import org.json.JSONArray;
@@ -28,10 +26,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {User.class, Proposition.class, Vote.class}, version = 1, exportSchema = false)
+@Database(entities = {Proposition.class, Vote.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
-    public abstract UserDao UserDao();
     public abstract PropositionDao PropositionDao();
     public abstract VoteDao voteDao();
 

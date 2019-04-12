@@ -43,13 +43,6 @@ public class ChannelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_channel);
         Log.i("Tom", "ChannelActivity Created");
 
-        //todo: testing only
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("user_id", 1);
-        editor.apply();
-
-
         //Set up RecyclerView
         recyclerView = findViewById(R.id.my_recycler_view);
 

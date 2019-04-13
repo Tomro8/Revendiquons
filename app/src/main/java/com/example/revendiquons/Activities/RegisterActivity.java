@@ -3,6 +3,7 @@ package com.example.revendiquons.Activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -110,12 +111,29 @@ public class RegisterActivity extends AppCompatActivity {
                         editor.putInt("user_id", user_id);
                         editor.apply();
 
-                        //Populate DB with user votes
-                        AppDatabase.getAppDatabase(getApplicationContext()).populateVoteEntity(getApplicationContext(), user_id);
+                        //Display toast to notify user for account activation
+                        final Toast accountCreatedToast = Toast.makeText(getApplicationContext(),
+                                "A verification email has been sent to your address, " +
+                                        "you have to activate your account before you can log in",
+                                Toast.LENGTH_LONG);
+
+                        // Set the countdown to display the toast
+                        CountDownTimer toastCountDown = new CountDownTimer(
+                                13000, 1000 /*Tick duration*/) {
+                            public void onTick(long millisUntilFinished) {
+                                accountCreatedToast.show();
+                            }
+                            public void onFinish() {
+                                accountCreatedToast.cancel();
+                            }
+                        };
+
+                        accountCreatedToast.show();
+                        toastCountDown.start();
 
                         //Go to channel Activity
-                        Intent channelActivity = new Intent(RegisterActivity.this, ChannelActivity.class);
-                        startActivity(channelActivity);
+                        Intent loginActivity = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(loginActivity);
                     } else {
                         if (json.getString("error").equals("mail already taken")) {
                             mail_textInput.setError("Account already existing");
@@ -132,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public boolean mailIsCompatible() {
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9]*\\@(efrei|esigetel|efreitech)(\\.net|\\.fr)");
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]+\\@(efrei|esigetel|efreitech)(\\.net|\\.fr)");
         return pattern.matcher(mail_textInput.getEditText().getText().toString()).matches();
     }
 

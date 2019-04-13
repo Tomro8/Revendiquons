@@ -62,7 +62,10 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "You must fill all the inputs", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                WebService.getInstance(getApplicationContext()).loginAPICall(email_textInput.getEditText().getText().toString(),
+
+                //API call to log user
+                WebService.getInstance(getApplicationContext()).loginAPICall(
+                        email_textInput.getEditText().getText().toString(),
                         pwd_textInput.getEditText().getText().toString(),
                         loginCallBack());
             }
@@ -94,9 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putInt("user_id", user_id);
                         editor.apply();
 
-                        //Populate DB with user votes
-                        AppDatabase.getAppDatabase(getApplicationContext()).populateVoteEntity(getApplicationContext(), user_id);
-
                         //Redirect to channel activity
                         Intent channelActivity = new Intent(getApplicationContext(), ChannelActivity.class);
                         startActivity(channelActivity);
@@ -104,6 +104,9 @@ public class LoginActivity extends AppCompatActivity {
                         switch (json.getString("error")) {
                             case "user not exist":
                                 email_textInput.setError("Account does not exist");
+                                break;
+                            case "account not activated" :
+                                email_textInput.setError("Account not activated");
                                 break;
                             case "wrong password":
                                 pwd_textInput.setError("Password is incorrect");

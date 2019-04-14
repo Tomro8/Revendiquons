@@ -17,7 +17,7 @@ import androidx.lifecycle.LiveData;
 
 public class VoteRepository {
     private VoteDao voteDao;
-    private LiveData<List<Vote>> allVotes;
+    private LiveData<List<Vote>> userVotes;
     static private VoteRepository instance;
 
     static public VoteRepository getInstance(Application application) {
@@ -30,11 +30,12 @@ public class VoteRepository {
     private VoteRepository(Application application) {
         AppDatabase db = AppDatabase.getAppDatabase(application);
         voteDao = db.voteDao();
-        allVotes = voteDao.getAll();
+        userVotes = voteDao.getUserVote();
+        Log.i("db","VoteRepository created, now exposes LiveData user votes");
     }
 
-    public LiveData<List<Vote>> getAllVotes() {
-        return allVotes;
+    public LiveData<List<Vote>> getUserVotes() {
+        return userVotes;
     }
 
     public void insert(Vote vote) {

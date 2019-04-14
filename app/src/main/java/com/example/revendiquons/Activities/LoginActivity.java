@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("volley", "response from server: " + response.toString());
+                Log.i("volley", "Login API Call. Response from server: " + response.toString());
                 try {
                     JSONObject json = new JSONObject(response);
 
@@ -96,6 +96,11 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putInt("user_id", user_id);
                         editor.apply();
+
+                        Log.i("db", "User logged in. User id: " + preferences.getInt("user_id", -1));
+
+                        //Populate Vote Entity with user votes from Remote, clear table before hand
+                        AppDatabase.getAppDatabase(getApplicationContext()).populateVoteEntity(getApplicationContext(), user_id);
 
                         //Redirect to channel activity
                         Intent channelActivity = new Intent(getApplicationContext(), ChannelActivity.class);

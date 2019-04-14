@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("volley", "response from server: " + response.toString());
+                Log.i("volley", "Register API Call, response from server: " + response.toString());
                 try {
                     //Convert string response to JSONObject
                     JSONObject json = new JSONObject(response);

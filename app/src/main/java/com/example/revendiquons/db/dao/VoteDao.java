@@ -21,7 +21,7 @@ public interface VoteDao {
     void updateVotes(Vote... votes);
 
     @Query("SELECT * FROM Vote")
-    LiveData<List<Vote>> getAll();
+    LiveData<List<Vote>> getUserVote();
 
     @Delete
     public void deleteVotes(Vote... votes);

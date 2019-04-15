@@ -99,13 +99,14 @@ public class ChildPropViewHolder extends ChildViewHolder {
         WebService.getInstance(itemView.getContext().getApplicationContext()).forwardVoteToAPI(vote, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.i("volley","Forward vote remote Callback response from server: " + response);
                 try {
                     JSONObject json = new JSONObject(response);
 
                     if (json.has("success")) {
-                        Log.i("volley","Successfully forwared vote to remote:" + vote);
+                        Log.i("volley","Successfully forwarded vote to remote:" + vote);
                     } else {
-                        Log.i("volley","Failed to forward vote to remote");
+                        Log.i("volley","Failed to forward vote to remote, error msg: " + json.get("error"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

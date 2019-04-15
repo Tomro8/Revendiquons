@@ -1,6 +1,8 @@
 package com.example.revendiquons.Activities;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.revendiquons.db.repository.DBOperationCallback;
@@ -18,18 +20,18 @@ public class ChannelViewModel extends AndroidViewModel {
     private PropositionRepository propRepository;
     private VoteRepository voteRepository;
     private LiveData<List<Proposition>> allProps;
-    private LiveData<List<Vote>> allVotes;
+    private LiveData<List<Vote>> userVote;
 
     public ChannelViewModel(Application application) {
         super(application);
         propRepository = PropositionRepository.getInstance(application);
         voteRepository = VoteRepository.getInstance(application);
         allProps = propRepository.getAllProps();
-        allVotes = voteRepository.getAllVotes();
-        Log.i("arch","ViewModelCreated");
+        userVote = voteRepository.getUserVotes();
+        Log.i("arch","Channel Activity ViewModel created");
     }
 
-    public LiveData<List<Proposition>> getAllProps() {
+    LiveData<List<Proposition>> getAllProps() {
         return allProps;
     }
 
@@ -43,12 +45,12 @@ public class ChannelViewModel extends AndroidViewModel {
     }
     */
 
-    public LiveData<List<Vote>> getAllVotes() {
-        return allVotes;
+    LiveData<List<Vote>> getUserVote() {
+        return userVote;
     }
 
-    public int getVoteValue(int user_id, int prop_id) { //Todo: Transform to querry
-        List<Vote> votes = allVotes.getValue();
+    int getVoteValue(int user_id, int prop_id) { //Todo: Transform to querry
+        List<Vote> votes = userVote.getValue();
         if (votes != null) {
             for (Vote vote : votes) {
                 if (user_id == vote.getId_user() && prop_id == vote.getId_proposition()) {

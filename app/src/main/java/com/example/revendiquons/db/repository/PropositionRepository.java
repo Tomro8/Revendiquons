@@ -29,8 +29,7 @@ public class PropositionRepository {
         AppDatabase db = AppDatabase.getAppDatabase(application);
         propDao = db.PropositionDao();
         allProps = propDao.getAll();
-        Log.i("arch","Repository initiated with props from DB");
-        Log.i("arch","RepositoryCreated");
+        Log.i("db","PropRepository created exposing Props LiveData");
     }
 
     public LiveData<List<Proposition>> getAllProps() {
@@ -60,7 +59,12 @@ public class PropositionRepository {
 
         @Override
         protected Void doInBackground(Proposition... propositions) {
-            Log.i("db", "Updating Prop !");
+            StringBuilder str = new StringBuilder();
+            for (Proposition prop : propositions) {
+                str.append(prop);
+            }
+
+            Log.i("db", "PropositionRepository: updating propositions as: " + str);
             propDao.updatePropositions(propositions);
             return null;
         }
@@ -94,7 +98,7 @@ public class PropositionRepository {
                 str.append(prop);
             }
 
-            Log.i("db", "PropRepo inserted: " + str);
+            Log.i("db", "PropRepo, inserted: " + str);
             return null;
         }
 

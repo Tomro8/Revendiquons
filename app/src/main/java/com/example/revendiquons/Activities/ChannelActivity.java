@@ -1,9 +1,7 @@
 package com.example.revendiquons.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,8 +39,19 @@ public class ChannelActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
-        Log.i("Tom", "ChannelActivity Created");
+        Log.i("UI", "ChannelActivity creation started");
 
+<<<<<<< HEAD
+=======
+        //todo: testing only
+        /*
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("user_id", 1);
+        editor.apply();
+        */
+
+>>>>>>> v3
         //Set up RecyclerView
         recyclerView = findViewById(R.id.my_recycler_view);
 
@@ -100,13 +109,21 @@ public class ChannelActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(ChannelViewModel.class);
         setLoadPropositionObserver();
 
-        //Applique les votes aux proposition sur l'UI (pour que l'iconne reste affiché comme tel)
-        viewModel.getAllVotes().observe(this, new Observer<List<Vote>>() {
+        //Applique les votes aux ChildPropViewHolder sur l'UI (pour que la bonne flèche soit sélectionnée et le reste)
+        viewModel.getUserVote().observe(this, new Observer<List<Vote>>() {
             @Override
             public void onChanged(List<Vote> votes) {
-                Log.i("UI", "Vote modified: " + votes.toString());
+                Log.i("UI", "User votes LiveData changed: " + votes.toString());
                 //Only if view is ready
                 if (expandableAdapter != null) {
+
+                    //Reset all displayed votes beforehand (in the case when LiveData had more votes previously)
+                    //Otherwise it can refresh votes if votes is empty
+                    for (ParentPropModel parentPropModel : parentPropModelList) {
+                        ChildPropModel childPropModel = parentPropModel.getItems().get(0);
+                        childPropModel.setVoteValue(0);
+                    }
+
                     //On parcourt Modèles des parents des propositions, on compare à la liste de vote jusqu'à trouver celui qui correspond.
                     //On change la valeur du vote dans le modèle de l'enfant
                     for (ParentPropModel parentPropModel : parentPropModelList) {

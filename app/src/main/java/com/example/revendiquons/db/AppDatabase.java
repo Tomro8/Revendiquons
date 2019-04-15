@@ -33,20 +33,23 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract VoteDao voteDao();
 
     public static AppDatabase getAppDatabase(final Context context) {
-        Log.i("db", "getAppdatabase call");
         if (INSTANCE == null) {
 
             RoomDatabase.Callback rdc = new RoomDatabase.Callback() {
                 @Override
                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being created");
-                    populateDB(context);
+
+                    //Destroy any data and fill with props from Remote
+                    populatePropEntity(context);
                 }
 
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     Log.i("db", "Db is being opened");
-                    populateDB(context);
+
+                    //Destroy any data and fill with props from Remote
+                    populatePropEntity(context);
 
                     //Todo: animation chargement
                 }
@@ -58,21 +61,12 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static void populateDB(Context context) {
-        populatePropEntity(context);
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context); //Todo: replace with user in DB
-        int user_id = preferences.getInt("user_id", -1); //-1 = default value
-
-        populateVoteEntity(context, user_id);
-    }
-
     public static void destroyInstance() {
         INSTANCE = null;
     }
 
-    public static void populateVoteEntity(Context context, int user_id) {
-        Log.i("db", "Population votes from userid: " + user_id);
+    public void populateVoteEntity(Context context, int user_id) {
+        Log.i("db", "Populating votes from userid: " + user_id);
         WebService.getInstance(context).getUserVotes(Integer.toString(user_id), populateVoteEntityCallback(context));
     }
 
@@ -84,11 +78,10 @@ public abstract class AppDatabase extends RoomDatabase {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("volley", "populate vote response from server: " + response);
+                Log.i("volley", "Populate vote, response from server: " + response);
                 try {
                     //Convert string response to JSONObject
                     JSONObject json = new JSONObject(response);
-                    Log.i("volley", "jsonObject: " + json);
 
                     if (json.has("error")) {
                         Log.i("volley", "Error from server: " + json.get("error"));
@@ -98,7 +91,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                         //Populate Table
                         JSONArray jsonArray = json.getJSONArray("votes");
-                        Log.i("volley", "json array: " + jsonArray);
                         for (int i=0; i<jsonArray.length(); i++) {
                             int id = jsonArray.getJSONObject(i).getInt("id");
                             int user_id = jsonArray.getJSONObject(i).getInt("id_user");
@@ -128,7 +120,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                     //Convert string response to JSONObject
                     JSONArray json = new JSONArray(response);
-                    Log.i("volley", "json: " + json);
 
                     for (int i=0; i<json.length(); i++) {
                         int id = json.getJSONObject(i).getInt("id");

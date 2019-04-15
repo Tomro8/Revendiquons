@@ -62,7 +62,10 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "You must fill all the inputs", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                WebService.getInstance(getApplicationContext()).loginAPICall(email_textInput.getEditText().getText().toString(),
+
+                //API call to log user
+                WebService.getInstance(getApplicationContext()).loginAPICall(
+                        email_textInput.getEditText().getText().toString(),
                         pwd_textInput.getEditText().getText().toString(),
                         loginCallBack());
             }
@@ -83,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         return new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("volley", "response from server: " + response.toString());
+                Log.i("volley", "Login API Call. Response from server: " + response.toString());
                 try {
                     JSONObject json = new JSONObject(response);
 
@@ -94,7 +97,9 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putInt("user_id", user_id);
                         editor.apply();
 
-                        //Populate DB with user votes
+                        Log.i("db", "User logged in. User id: " + preferences.getInt("user_id", -1));
+
+                        //Populate Vote Entity with user votes from Remote, clear table before hand
                         AppDatabase.getAppDatabase(getApplicationContext()).populateVoteEntity(getApplicationContext(), user_id);
 
                         //Redirect to channel activity
@@ -104,6 +109,9 @@ public class LoginActivity extends AppCompatActivity {
                         switch (json.getString("error")) {
                             case "user not exist":
                                 email_textInput.setError("Account does not exist");
+                                break;
+                            case "account not activated" :
+                                email_textInput.setError("Account not activated");
                                 break;
                             case "wrong password":
                                 pwd_textInput.setError("Password is incorrect");

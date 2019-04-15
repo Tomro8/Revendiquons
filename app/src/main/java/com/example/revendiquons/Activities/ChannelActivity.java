@@ -49,6 +49,8 @@ public class ChannelActivity extends AppCompatActivity {
 
     private Observer<List<Proposition>> loadPropositionObserver;
     private Observer<List<Proposition>> refreshPropositionObserver;
+    private int user_id;
+    //todo: in MVVM I should not put data in the view. But as long as I don't have a logout button, I cannot put user_id in viewModel, when switching user, I currently can't recreate viewModel
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,12 +67,16 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
-        //todo: testing only
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        //todo: testing only
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("user_id", 1);
         editor.apply();
+        //------------------
 
+        user_id = preferences.getInt("user_id", -1);
 
         //Set up RecyclerView
         recyclerView = findViewById(R.id.my_recycler_view);
@@ -78,8 +84,6 @@ public class ChannelActivity extends AppCompatActivity {
         //Set a linear layout manager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ChannelActivity.this);
         recyclerView.setLayoutManager(layoutManager);
-
-
 
         //Setup observer
         loadPropositionObserver = new Observer<List<Proposition>>() {
@@ -90,7 +94,7 @@ public class ChannelActivity extends AppCompatActivity {
                 parentPropModelList = new ArrayList<>();
 
                 for (Proposition prop : propositions) {
-                    int voteValue = viewModel.getVoteValue(prop.getUser_id(), prop.getId());
+                    int voteValue = viewModel.getVoteValue(user_id, prop.getId());
                     List<ChildPropModel> childrenList = new ArrayList<>();
                     childrenList.add(new ChildPropModel(prop.getDescription(), voteValue));
 

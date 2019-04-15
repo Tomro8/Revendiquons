@@ -1,15 +1,13 @@
 package com.example.revendiquons.Activities;
 
 import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.example.revendiquons.db.entity.Proposition;
+import com.example.revendiquons.db.entity.Vote;
 import com.example.revendiquons.db.repository.DBOperationCallback;
 import com.example.revendiquons.db.repository.PropositionRepository;
 import com.example.revendiquons.db.repository.VoteRepository;
-import com.example.revendiquons.db.entity.Proposition;
-import com.example.revendiquons.db.entity.Vote;
 
 import java.util.List;
 

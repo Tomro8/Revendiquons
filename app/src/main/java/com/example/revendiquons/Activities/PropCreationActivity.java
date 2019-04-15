@@ -12,14 +12,13 @@ import android.widget.Toast;
 
 import com.example.revendiquons.R;
 import com.example.revendiquons.WebService;
+import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.repository.DBOperationCallback;
 import com.example.revendiquons.db.repository.PropositionRepository;
-import com.example.revendiquons.db.entity.Proposition;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class PropCreationActivity extends AppCompatActivity {
     //todo: boutton cancel / retour
@@ -51,7 +50,6 @@ public class PropCreationActivity extends AppCompatActivity {
 
                 String title = title_textInput.getEditText().getText().toString();
                 String desc = desc_textInput.getEditText().getText().toString();
-                //todo : max length for title
 
                 final Proposition prop = new Proposition(0, user_id, title, desc, 0, 0);
 

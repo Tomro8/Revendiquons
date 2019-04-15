@@ -2,19 +2,17 @@ package com.example.revendiquons.db;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.example.revendiquons.WebService;
-import com.example.revendiquons.db.repository.DBOperationCallback;
-import com.example.revendiquons.db.repository.PropositionRepository;
-import com.example.revendiquons.db.repository.VoteRepository;
 import com.example.revendiquons.db.dao.PropositionDao;
 import com.example.revendiquons.db.dao.VoteDao;
 import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.entity.Vote;
+import com.example.revendiquons.db.repository.DBOperationCallback;
+import com.example.revendiquons.db.repository.PropositionRepository;
+import com.example.revendiquons.db.repository.VoteRepository;
 
 import org.json.JSONArray;
 import org.json.JSONException;

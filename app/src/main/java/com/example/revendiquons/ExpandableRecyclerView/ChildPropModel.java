@@ -45,11 +45,11 @@ public class ChildPropModel implements Parcelable {
         parcel.writeInt(voteValue);
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
-    public int getVoteValue() {
+    int getVoteValue() {
         Log.i("rcl","in child model, return vote value: " + voteValue);
         return voteValue;
     }

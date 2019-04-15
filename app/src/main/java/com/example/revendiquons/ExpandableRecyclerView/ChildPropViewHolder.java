@@ -10,10 +10,8 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.example.revendiquons.Activities.ChannelActivity;
-import com.example.revendiquons.Activities.PropCreationActivity;
 import com.example.revendiquons.R;
 import com.example.revendiquons.WebService;
-import com.example.revendiquons.db.AppDatabase;
 import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.entity.Vote;
 import com.example.revendiquons.db.repository.DBBeforeOperation;

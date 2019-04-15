@@ -1,9 +1,9 @@
 package com.example.revendiquons.ExpandableRecyclerView;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.LayoutInflater;
 
 import com.example.revendiquons.R;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;

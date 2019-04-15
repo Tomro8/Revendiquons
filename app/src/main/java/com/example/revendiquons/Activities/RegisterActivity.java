@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.example.revendiquons.R;
 import com.example.revendiquons.WebService;
-import com.example.revendiquons.db.AppDatabase;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;

@@ -1,4 +1,9 @@
 
+# Revendiquons
+### Team members
+- Baptise Perreaux
+- Dan Lipsker
+- Thomas Pasquier
 
 # Introduction
 As explained in the specification of our application that we handed previously (that I suggest you to have a look at again), the goal of this application is to provide a way for students of Efrei Paris to propose ideas to improve the school.

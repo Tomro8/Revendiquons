@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import com.android.volley.Response;
 import com.example.revendiquons.ExpandableRecyclerView.ParentPropModel;
@@ -20,8 +19,6 @@ import com.example.revendiquons.db.entity.Proposition;
 import com.example.revendiquons.db.entity.Vote;
 import com.example.revendiquons.db.repository.DBOperationCallback;
 import com.example.revendiquons.db.repository.PropositionRepository;
-import com.github.ybq.android.spinkit.sprite.Sprite;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 
 import org.json.JSONArray;
 import org.json.JSONException;

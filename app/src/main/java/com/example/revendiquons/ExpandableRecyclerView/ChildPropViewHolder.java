@@ -47,7 +47,6 @@ public class ChildPropViewHolder extends ChildViewHolder {
                     //Increase Positive Counter
                     proposition.incPositive();
 
-
                     if (downBtn.isChecked()) {
                         downBtn.setChecked(false);
                         proposition.decNegative();
@@ -89,6 +88,7 @@ public class ChildPropViewHolder extends ChildViewHolder {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
         int user_id = preferences.getInt("user_id", -1); //-1 = default value
         updateVoteValue();
+        Log.i("UI","User voted for prop id: " + proposition.getId() + ". Vote value: " + voteValue);
         final Vote vote = new Vote(0, user_id, proposition.getId(), voteValue);
 
         //Adding vote to DB

@@ -43,7 +43,7 @@ We wanted to display propositions in a way that would allow the user to quickly 
 # Upcoming Features
 An application's development is never complete. There are always things to improve or functionalities to add. Revendiquons is only a newborn, and the potential upgrades it needs to become a real application are almost infinite. Nevertheless, the nextcoming features we want to add to this app are:
 - A toolbar with a logout button
-- When the user is logged in the application, we he relaunch it, he is automatically logged in and redirected to the main page.
+- When the user is logged in the application, when he relaunch it, he is automatically logged in and redirected to the main page.
 - A refresh function: when the user scroll's up the list, data are fetched from server.
 - Data fetched from server periodically for a Real-time application.
 - Animations: when going from one activity to the other, loading snippet when fetching data...

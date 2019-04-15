@@ -67,15 +67,7 @@ public class ChannelActivity extends AppCompatActivity {
             }
         });
 
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        //todo: testing only
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("user_id", 1);
-        editor.apply();
-        //------------------
-
         user_id = preferences.getInt("user_id", -1);
 
         //Set up RecyclerView
